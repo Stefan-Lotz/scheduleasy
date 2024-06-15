@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monda&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  cursor: pointer;
+}
+
+body {
+  color: #222;
+  height: 100%;
+}
+
+img {
+  max-width: 100%;
+}
+
+main {
+  margin: 0 auto;
+}
+
+header a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.wonk{
+  font-variation-settings: "WONK" 1;
+}
+
+.noWonk {
+  font-variation-settings: "WONK" 0;
+}
+
+.soft{
+  font-variation-settings: "SOFT" 100;
+}
+
+.vh {
+  height: 100vh;
+}
+
+header nav {
+  display: flex;
+  gap: 15px;
+}
+
+div.schedule {
+  grid-template-columns: 0.5fr 2fr;
+}
+
+
+div.info p {
+  line-height: 7px;
+}
+
+button.button1 {
+  cursor: pointer;
+  width: 100%;
+  display: block;
+  background-color: #555;
+  border: 0;
+  color: white;
+  border-radius: 5px;
+  padding: 7px 0;
+}
+
+div.error {
+  background-color: #f06d6d;
+  padding: 5px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  text-align: center;
+  border: 2px solid #e94747;
+  color: #fff;
+}
+
+h1.title {
+  text-align: center;
+  display: block;
+  width: 50%;
+  margin: auto;
+  padding: 10px 0px;
+  justify-content: center;
+  border-radius: 25px;
+  border: 3px solid #555;
+}
+
+.gutter {
+  background-color: #e5e5e5;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  cursor: col-resize;
+}
+
+.gutter.gutter-vertical {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+  cursor: row-resize;
+}
