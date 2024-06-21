@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import Split from 'react-split';
 import ReactTimeAgo from 'react-time-ago';
+import confetti from 'canvas-confetti';
 import Header from "../Header";
 import { InformationCircleIcon, EllipsisHorizontalCircleIcon, ExclamationCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon as PaperAirplaneOutline } from "@heroicons/react/24/outline";
@@ -133,6 +134,11 @@ export default function SchedulePage() {
             });
 
             document.title = `${timeLeftString}`;
+
+            if (timeLeft === 1) {
+                setTimeout(startFireworks, 1000);
+            }
+
         } else {
             setCurrentPeriodInfo({
                 status: 'Transition',
@@ -142,6 +148,42 @@ export default function SchedulePage() {
             document.title = 'Transition period';
         }
     };
+    
+    function firework() {
+        confetti({
+            startVelocity: 30,
+            ticks: 60,
+            spread: 360,
+            colors: ['264653', '2A9D8F', 'E9C46A', 'F4A261', 'E76F51'],
+            origin: {
+                x: Math.random() * (0.1 - 0.3) + 0.3,
+                y: Math.random() - 0.1
+            }
+        });
+        confetti({
+            startVelocity: 30,
+            ticks: 60,
+            spread: 360,
+            colors: ['264653', '2A9D8F', 'E9C46A', 'F4A261', 'E76F51'],
+            origin: {
+                x: Math.random() * (0.7 - 0.9) + 0.9,
+                y: Math.random() - 0.1
+            }
+        });
+    }
+    
+    function startFireworks() {
+        const duration = 2500;
+        const interval = 300;
+        const end = Date.now() + duration;
+    
+        const intervalId = setInterval(() => {
+            firework();
+            if (Date.now() > end) {
+                clearInterval(intervalId);
+            }
+        }, interval);
+    }
 
     const formatTime = (time) => {
         let [hours, minutes] = time.split(':');
