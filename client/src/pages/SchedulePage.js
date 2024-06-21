@@ -16,9 +16,10 @@ import UserMessage from "../UserMessage";
 export default function SchedulePage() {
     const [scheduleInfo, setScheduleInfo] = useState(null);
     const [newMessage, setNewMessage] = useState('');
+    const [currentPeriodInfo, setCurrentPeriodInfo] = useState({ status: 'transition period', timeLeft: '' });
     const { userInfo } = useContext(UserContext);
     const { url } = useParams();
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
     const messageContainerRef = useRef(null);
     const [sendIsHovered, setSendIsHovered] = useState(false);
     const [editIsHovered, setEditIsHovered] = useState(false);
@@ -41,6 +42,7 @@ export default function SchedulePage() {
                 return;
             }
             setScheduleInfo(scheduleInfo);
+            updateCurrentPeriod(scheduleInfo);
         })
         .catch(error => {
             console.error('Failed to fetch schedule:', error);
@@ -83,9 +85,65 @@ export default function SchedulePage() {
         });
     };
 
-    if (!scheduleInfo) return '';
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            updateCurrentPeriod(scheduleInfo);
+        }, 1000);
 
-    function formatTime(time) {
+        return () => clearInterval(intervalId);
+    }, [scheduleInfo]);
+
+    const updateCurrentPeriod = (ScheduleInfo) => {
+        const now = new Date();
+        const currentSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+
+        let currentPeriod = null;
+        let timeLeft = 0;
+
+        for (const period of ScheduleInfo.periods) {
+            const [startHour, startMinute] = period.startTime.split(':').map(Number);
+            const [endHour, endMinute] = period.endTime.split(':').map(Number);
+
+            const startSeconds = startHour * 3600 + startMinute * 60;
+            const endSeconds = endHour * 3600 + endMinute * 60;
+
+            if (currentSeconds >= startSeconds && currentSeconds < endSeconds) {
+                currentPeriod = period;
+                timeLeft = endSeconds - currentSeconds;
+                break;
+            }
+        }
+
+        if (currentPeriod) {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+
+            let timeLeftString;
+
+            if (hours > 0) {
+                timeLeftString = `${hours} hour${hours > 1 ? 's' : ''}, ${minutes} minutes, and ${seconds} seconds left`;
+            } else {
+                timeLeftString = `${minutes} minutes and ${seconds} seconds left`;
+            }
+
+            setCurrentPeriodInfo({
+                status: currentPeriod.name,
+                timeLeft: timeLeftString,
+            });
+
+            document.title = `${timeLeftString}`;
+        } else {
+            setCurrentPeriodInfo({
+                status: 'Transition',
+                timeLeft: '',
+            });
+
+            document.title = 'Transition period';
+        }
+    };
+
+    const formatTime = (time) => {
         let [hours, minutes] = time.split(':');
         hours = parseInt(hours);
         minutes = parseInt(minutes);
@@ -98,6 +156,8 @@ export default function SchedulePage() {
 
         return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
     }
+
+    if (!scheduleInfo) return '';
 
     return (
         <>
@@ -112,8 +172,8 @@ export default function SchedulePage() {
                     <h1 className="my-2.5 mx-auto py-3 px-3 justify-center text-3xl rounded-full border-solid border-2 border-neutral-300 bg-white">
                         {scheduleInfo.title}
                     </h1>
-                    <h2 className="my-2.5">Current period: Period 5</h2>
-                    <h2 className="my-2.5">24 minutes and 56 seconds left</h2>
+                    <h2 className="my-2.5">Current period: {currentPeriodInfo.status}</h2>
+                    {currentPeriodInfo.timeLeft && <h2 className="my-2.5">{currentPeriodInfo.timeLeft}</h2>}
                     {userInfo.id === scheduleInfo.author._id && (
                         <p>This is your schedule!</p>
                     )}
