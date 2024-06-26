@@ -1,4 +1,4 @@
-import { InformationCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
+import { LinkIcon } from "@heroicons/react/24/outline";
 import { React, useState } from "react";
 import ReactTimeAgo from "react-time-ago";
 import { PencilSquareIcon as EditOutline } from "@heroicons/react/24/outline";
@@ -16,9 +16,6 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
 
   return (
     <div>
-      <div className="flex justify-center">
-        <InformationCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
-      </div>
       <div className="flex flex-col text-left ml-5 mr-5 gap-1">
         <p>Created by: {scheduleInfo.author.username}</p>
         <p>{scheduleInfo.about}</p>

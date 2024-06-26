@@ -4,6 +4,7 @@ import { UserContext } from "../UserContext";
 import confetti from "canvas-confetti";
 import Header from "../Header";
 import DesktopSchedulePage from "./DesktopSchedulePage";
+import MobileSchedulePage from "./MobileSchedulePage";
 
 export default function SchedulePage() {
   const [scheduleInfo, setScheduleInfo] = useState(null);
@@ -199,7 +200,18 @@ export default function SchedulePage() {
     <>
       <Header />
       {width <= 768 ? (
-        <p>mobile layout</p>
+        <MobileSchedulePage
+          scheduleInfo={scheduleInfo}
+          currentPeriodInfo={currentPeriodInfo}
+          updateCurrentPeriod={updateCurrentPeriod}
+          userInfo={userInfo}
+          handleMessageSubmit={handleMessageSubmit}
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
+          messageContainerRef={messageContainerRef}
+          sendIsHovered={sendIsHovered}
+          setSendIsHovered={setSendIsHovered}
+        />
       ) : (
         <DesktopSchedulePage
           scheduleInfo={scheduleInfo}

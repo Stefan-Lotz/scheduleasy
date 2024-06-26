@@ -1,6 +1,4 @@
-import React from "react";
-import { useContext } from "react";
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { React, useContext } from "react";
 import { PaperAirplaneIcon as PaperAirplaneOutline } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon as PaperAirplaneSolid } from "@heroicons/react/24/solid";
 import UserMessage from "../UserMessage";
@@ -19,9 +17,6 @@ const AnnouncementsSplit = ({
 
   return (
     <div className="relative h-full flex flex-col">
-      <div className="flex justify-center">
-        <ExclamationCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
-      </div>
       <div
         className="flex-1 overflow-y-auto overflow-x-hidden mb-2"
         ref={messageContainerRef}
@@ -43,7 +38,7 @@ const AnnouncementsSplit = ({
                 type="text"
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Send an announcement..."
-                className="w-full rounded-3xl border-gray-300 resize-y overflow-y-auto mb-0.5"
+                className="w-full rounded-3xl border-2 p-2 border-gray-300 resize-y overflow-y-auto mb-0.5"
               />
               <button
                 type="button"

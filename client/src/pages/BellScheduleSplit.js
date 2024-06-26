@@ -1,5 +1,4 @@
 import React from "react";
-import { EllipsisHorizontalCircleIcon } from "@heroicons/react/24/outline";
 
 const BellScheduleSplit = ({ scheduleInfo }) => {
   function formatTime(time) {
@@ -18,9 +17,6 @@ const BellScheduleSplit = ({ scheduleInfo }) => {
 
   return (
     <div className="truncate">
-      <div className="flex justify-center">
-        <EllipsisHorizontalCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
-      </div>
       <table className="w-full max-w-sm m-auto">
         <tbody>
           {scheduleInfo.periods?.map((period, index) => (

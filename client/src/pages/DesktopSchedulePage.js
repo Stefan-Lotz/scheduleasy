@@ -3,8 +3,13 @@ import Split from "react-split";
 import AnnouncementsSplit from "./AnnouncementsSplit";
 import BellScheduleSplit from "./BellScheduleSplit";
 import InformationSplit from "./InformationSplit";
+import {
+  EllipsisHorizontalCircleIcon,
+  ExclamationCircleIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
 
-const DesktopLayout = ({
+const DesktopSchedulePage = ({
   scheduleInfo,
   currentPeriodInfo,
   updateCurrentPeriod,
@@ -41,23 +46,36 @@ const DesktopLayout = ({
         )}
       </div>
       <Split className="flex" minSize={0}>
-        <AnnouncementsSplit
-          scheduleInfo={scheduleInfo}
-          handleMessageSubmit={handleMessageSubmit}
-          newMessage={newMessage}
-          setNewMessage={setNewMessage}
-          messageContainerRef={messageContainerRef}
-          sendIsHovered={sendIsHovered}
-          setSendIsHovered={setSendIsHovered}
-          updateCurrentPeriod={updateCurrentPeriod}
-        />
-
-        <BellScheduleSplit scheduleInfo={scheduleInfo} />
-
-        <InformationSplit scheduleInfo={scheduleInfo} userInfo={userInfo} />
+        <div>
+          <div className="flex justify-center">
+            <ExclamationCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
+          </div>
+          <AnnouncementsSplit
+            scheduleInfo={scheduleInfo}
+            handleMessageSubmit={handleMessageSubmit}
+            newMessage={newMessage}
+            setNewMessage={setNewMessage}
+            messageContainerRef={messageContainerRef}
+            sendIsHovered={sendIsHovered}
+            setSendIsHovered={setSendIsHovered}
+            updateCurrentPeriod={updateCurrentPeriod}
+          />
+        </div>
+        <div>
+          <div className="flex justify-center">
+            <InformationCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
+          </div>
+          <BellScheduleSplit scheduleInfo={scheduleInfo} />
+        </div>
+        <div>
+          <div className="flex justify-center">
+            <EllipsisHorizontalCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
+          </div>
+          <InformationSplit scheduleInfo={scheduleInfo} userInfo={userInfo} />
+        </div>
       </Split>
     </Split>
   );
 };
 
-export default DesktopLayout;
+export default DesktopSchedulePage;
