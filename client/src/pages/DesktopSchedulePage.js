@@ -34,7 +34,7 @@ const DesktopSchedulePage = ({
       minSize={[100, 0]}
     >
       <div className="overflow-hidden text-center flex flex-col justify-center font-monda text-2xl">
-        <h1 className="my-2.5 mx-auto py-3 px-3 justify-center text-3xl rounded-full border-solid border-2 border-neutral-300 bg-white">
+        <h1 className="my-2.5 mx-auto font-syne py-3 px-3 justify-center text-3xl rounded-full border-solid border-2 border-neutral-300 bg-white">
           {scheduleInfo.title}
         </h1>
         <h2 className="my-2.5">Current period: {currentPeriodInfo.status}</h2>

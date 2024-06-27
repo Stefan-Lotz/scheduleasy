@@ -18,6 +18,7 @@ module.exports = {
           sansita: 'Sansita Swashed, system-ui',
           fraunces: 'Fraunces, serif',
           monda: 'Monda, sans-serif',
+          syne: 'Syne, sans-serif',
       }
     },
   },
