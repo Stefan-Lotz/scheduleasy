@@ -1,8 +1,12 @@
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
 export default function IndexPage() {
   return (
     <>
+      <Helmet>
+        <title>Home | Scheduleasy</title>
+      </Helmet>
       <h1 className="font-syne font-extrabold text-mint text-center text-4xl mt-7 mb-1 mx-auto w-4/5">
         Manage your class time efficiently with{" "}
         <span className="font-syne text-slate italic">Scheduleasy</span>.

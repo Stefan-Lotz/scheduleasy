@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet";
 import { Navigate } from "react-router-dom";
 
 export default function CreatePage() {
@@ -52,6 +53,9 @@ export default function CreatePage() {
 
   return (
     <div className="font-syne">
+      <Helmet>
+        <title>Create | Scheduleasy</title>
+      </Helmet>
       <h1 className="text-center py-5 text-3xl font-semibold">
         Create a schedule!
       </h1>

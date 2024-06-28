@@ -1,14 +1,14 @@
-import './App.css';
-import {Route, Routes} from "react-router-dom";
-import Layout from './Layout';
-import IndexPage from './pages/IndexPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import CreatePage from './pages/CreatePage';
-import SchedulePage from './pages/SchedulePage';
-import SchedulesPage from './pages/SchedulesPage';
-import NotFoundPage from './pages/NotFoundPage';
-import { UserContextProvider } from './UserContext';
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./Layout";
+import IndexPage from "./pages/IndexPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import CreatePage from "./pages/CreatePage";
+import SchedulePage from "./pages/SchedulePage";
+import SchedulesPage from "./pages/SchedulesPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import { UserContextProvider } from "./UserContext";
 
 function App() {
   return (

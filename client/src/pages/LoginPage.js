@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Helmet } from "react-helmet";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -48,6 +49,9 @@ export default function LoginPage() {
         backgroundSize: "100% auto",
       }}
     >
+      <Helmet>
+        <title>Log In | Scheduleasy</title>
+      </Helmet>
       <div className="flex flex-col vh bg-white md:bg-transparent md:mx-5 place-content-center md:w-1/2">
         {fromRegister && (
           <div className="w-5/6 bg-green-400 mx-auto text-center text-white text-lg py-2 rounded-lg mb-5 border-2 border-solid border-green-500">

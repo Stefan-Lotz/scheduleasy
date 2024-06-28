@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import UserSchedule from "../UserSchedule";
+import { Helmet } from "react-helmet";
 
 export default function IndexPage() {
   const [schedules, setSchedules] = useState([]);
@@ -14,6 +15,9 @@ export default function IndexPage() {
 
   return (
     <>
+      <Helmet>
+        <title>Browse | Scheduleasy</title>
+      </Helmet>
       <div className="text-center font-syne">
         <h1 className="font-bold text-3xl mt-8 sm:mt-5">Schedules</h1>
         <p className="text-lg mt-4 mb-8 sm:mb-5">

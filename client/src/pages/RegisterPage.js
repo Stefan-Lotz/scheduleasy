@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Helmet } from "react-helmet";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -41,6 +42,9 @@ export default function RegisterPage() {
         backgroundSize: "100% auto",
       }}
     >
+      <Helmet>
+        <title>Register | Scheduleasy</title>
+      </Helmet>
       <div className="flex flex-col vh bg-white md:bg-transparent md:mx-5 place-content-center md:w-1/2">
         {error && (
           <div className="w-5/6 bg-red-400 mx-auto text-center text-white text-lg py-2 rounded-lg mb-5 border-2 border-solid border-red-500">
@@ -54,9 +58,7 @@ export default function RegisterPage() {
           Scheduleasy
         </Link>
         <div className="my-10 text-center">
-          <h1 className="font-syne font-bold text-4xl text-slate">
-            Sign Up
-          </h1>
+          <h1 className="font-syne font-bold text-4xl text-slate">Sign Up</h1>
           <form className="max-w-sm mx-auto py-5" onSubmit={register}>
             <div className="relative">
               <input

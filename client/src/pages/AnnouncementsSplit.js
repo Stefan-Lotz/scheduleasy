@@ -38,12 +38,12 @@ const AnnouncementsSplit = ({
                 type="text"
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Send an announcement..."
-                className="w-full rounded-3xl border-2 p-2 border-gray-300 resize-y overflow-y-auto mb-0.5"
+                className="w-full rounded-3xl border-2 p-2 border-gray-300 resize-y overflow-y-auto mb-10"
               />
               <button
                 type="button"
                 onClick={handleMessageSubmit}
-                className="bg-mint p-1 text-white rounded-full flex hover:bg-slate"
+                className="bg-mint p-1 text-white rounded-full flex hover:bg-slate mb-10"
                 onMouseEnter={() => setSendIsHovered(true)}
                 onMouseLeave={() => setSendIsHovered(false)}
               >
