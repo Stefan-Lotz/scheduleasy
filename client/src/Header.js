@@ -36,7 +36,7 @@ export default function Header() {
   function toggleMenu() {
     return (
       <div
-        className="absolute flex flex-col right-5 top-12 bg-gray-100 p-3 gap-y-2 rounded-lg"
+        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-lg"
         id="menu"
       >
         <Link
@@ -51,7 +51,7 @@ export default function Header() {
           className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
         >
           <Squares2X2Icon className="size-5" />
-          View schedules
+          Schedules
         </Link>
         <Link
           to="/login"
@@ -73,7 +73,7 @@ export default function Header() {
   function toggleMenuLoggedIn() {
     return (
       <div
-        className="absolute flex flex-col right-5 top-12 bg-gray-100 p-3 gap-y-2 rounded-lg"
+        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-lg"
         id="menu"
       >
         <Link
@@ -95,7 +95,7 @@ export default function Header() {
           className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
         >
           <Squares2X2Icon className="size-5" />
-          View schedules
+          Schedules
         </Link>
         <button
           onClick={logout}
@@ -112,7 +112,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="text-slate my-2.5 hidden md:flex justify-around px-0 items-center w-full font-syne text-lg">
+      <header className="text-slate my-2.5 hidden md:flex justify-between px-4 items-center max-w-screen-xl mx-auto font-syne text-lg">
         <Link to="/" className="text-3xl font-shrikhand">
           Scheduleasy
         </Link>
@@ -140,7 +140,7 @@ export default function Header() {
           )}
         </nav>
       </header>
-      <header className="text-slate my-2.5 flex md:hidden justify-between px-4 md:justify-around md:px-0 items-center w-full font-syne text-lg">
+      <header className="text-slate my-2.5 flex md:hidden justify-between px-4 md:justify-around md:px-0 items-center max-w-screen-xl mx-auto font-syne text-lg">
         <Link to="/" className="text-3xl font-shrikhand">
           Scheduleasy
         </Link>
