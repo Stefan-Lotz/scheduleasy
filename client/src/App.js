@@ -8,6 +8,7 @@ import CreatePage from "./pages/CreatePage";
 import SchedulePage from "./pages/SchedulePage";
 import SchedulesPage from "./pages/SchedulesPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import AboutPage from "./pages/AboutPage";
 import { UserContextProvider } from "./UserContext";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route index element={<IndexPage />} />
           <Route path="/schedules" element={<SchedulesPage />} />
           <Route path="/create" element={<CreatePage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
