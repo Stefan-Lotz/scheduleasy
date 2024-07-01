@@ -15,35 +15,15 @@ export default function IndexPage() {
         .
       </h1>
       <div className="flex justify-center">
-        {document.documentElement.classList.contains("dark") ? (
-          <svg
-            className="bg-saffron"
-            width="110%"
-            height="70"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-          >
-            <path
-              id="wavepath"
-              d="M0,0  L110,0C35,150 35,0 0,100z"
-              fill="#222"
-            ></path>
-          </svg>
-        ) : (
-          <svg
-            className="bg-saffron"
-            width="110%"
-            height="70"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-          >
-            <path
-              id="wavepath"
-              d="M0,0  L110,0C35,150 35,0 0,100z"
-              fill="#fff"
-            ></path>
-          </svg>
-        )}
+        <svg
+          className="bg-saffron fill-[#fff] dark:fill-222"
+          width="110%"
+          height="70"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <path id="wavepath" d="M0,0  L110,0C35,150 35,0 0,100z"></path>
+        </svg>
       </div>
       <div className="bg-saffron text-center md:text-left flex justify-center md:items-center md:gap-10 px-6">
         <svg
@@ -389,7 +369,7 @@ export default function IndexPage() {
           </svg>
         ) : (
           <svg
-            className="bg-white"
+            className="bg-white dark:bg-222"
             width="110%"
             height="70"
             viewBox="0 0 100 100"
