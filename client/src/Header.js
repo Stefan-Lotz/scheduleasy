@@ -14,7 +14,7 @@ import {
   ComputerDesktopIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Header() {
+const Header = ({ handleTheme }) => {
   const { userInfo, setUserInfo } = useContext(UserContext);
   const [popUpMenu, setPopUpMenu] = useState(false);
 
@@ -26,16 +26,6 @@ export default function Header() {
         setUserInfo(userInfo);
       });
     });
-
-    const theme = localStorage.getItem("theme");
-    if (theme) {
-      document.documentElement.classList.remove("dark");
-      if (theme === "dark") {
-        document.documentElement.classList.add("dark");
-      }
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.classList.add("dark");
-    }
   }, []);
 
   function logout() {
@@ -44,23 +34,6 @@ export default function Header() {
       method: "POST",
     });
     setUserInfo(null);
-  }
-
-  function handleTheme(preference) {
-    if (preference === "light") {
-      localStorage.setItem("theme", "light");
-      document.documentElement.classList.remove("dark");
-    } else if (preference === "dark") {
-      localStorage.setItem("theme", "dark");
-      document.documentElement.classList.add("dark");
-    } else if (preference === "os") {
-      localStorage.removeItem("theme");
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
   }
 
   function toggleMenu() {
@@ -229,4 +202,6 @@ export default function Header() {
       </header>
     </>
   );
-}
+};
+
+export default Header;

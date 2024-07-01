@@ -6,7 +6,7 @@ import Header from "../Header";
 import DesktopSchedulePage from "./DesktopSchedulePage";
 import MobileSchedulePage from "./MobileSchedulePage";
 
-export default function SchedulePage() {
+const SchedulePage = ({ handleTheme }) => {
   const [scheduleInfo, setScheduleInfo] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [currentPeriodInfo, setCurrentPeriodInfo] = useState({
@@ -198,7 +198,7 @@ export default function SchedulePage() {
 
   return (
     <>
-      <Header />
+      <Header handleTheme={handleTheme} />
       {width <= 768 ? (
         <MobileSchedulePage
           scheduleInfo={scheduleInfo}
@@ -228,4 +228,6 @@ export default function SchedulePage() {
       )}
     </>
   );
-}
+};
+
+export default SchedulePage;

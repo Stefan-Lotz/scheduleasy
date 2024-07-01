@@ -32,6 +32,11 @@ const DesktopSchedulePage = ({
       sizes={[75, 25]}
       style={{ height: "calc(100vh - 56px)" }}
       minSize={[100, 0]}
+      gutter={(index, direction) => {
+        const gutter = document.createElement("div");
+        gutter.className = `gutter gutter-${direction} bg-[#e5e5e5] dark:bg-[#404040]`;
+        return gutter;
+      }}
     >
       <div className="overflow-hidden text-center flex flex-col justify-center font-monda text-2xl dark:text-white">
         <h1 className="my-2.5 mx-auto font-syne py-3 px-3 justify-center text-3xl rounded-full border-solid border-2 border-neutral-300 dark:border-neutral-500 bg-white dark:bg-222">
@@ -45,7 +50,15 @@ const DesktopSchedulePage = ({
           <p>This is your schedule!</p>
         )}
       </div>
-      <Split className="flex" minSize={0}>
+      <Split
+        className="flex"
+        minSize={0}
+        gutter={(index, direction) => {
+          const gutter = document.createElement("div");
+          gutter.className = `gutter gutter-${direction} bg-[#e5e5e5] dark:bg-[#404040]`;
+          return gutter;
+        }}
+      >
         <div>
           <div className="flex justify-center">
             <ExclamationCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
