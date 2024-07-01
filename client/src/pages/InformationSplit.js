@@ -16,7 +16,7 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
 
   return (
     <div>
-      <div className="flex flex-col text-left ml-5 mr-5 gap-1 font-syne">
+      <div className="flex flex-col text-left ml-5 mr-5 gap-1 font-syne dark:text-white">
         <p>Created by: {scheduleInfo.author.username}</p>
         <p>{scheduleInfo.about}</p>
         <p>

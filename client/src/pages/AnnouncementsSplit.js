@@ -38,7 +38,7 @@ const AnnouncementsSplit = ({
                 type="text"
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Send an announcement..."
-                className="w-full rounded-3xl border-2 p-2 border-gray-300 resize-y overflow-y-auto mb-10"
+                className="w-full rounded-3xl border-2 p-2 border-gray-300 dark:border-neutral-500 dark:bg-transparent dark:text-white resize-y overflow-y-auto mb-10"
               />
               <button
                 type="button"

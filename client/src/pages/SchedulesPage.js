@@ -42,13 +42,13 @@ export default function IndexPage() {
       <Helmet>
         <title>Browse | Scheduleasy</title>
       </Helmet>
-      <div className="text-center font-syne">
+      <div className="text-center font-syne dark:text-white">
         <h1 className="font-bold text-3xl mt-8 sm:mt-5">Schedules</h1>
         <p className="text-lg mt-4 mb-8 sm:mb-5">
           Browse the list of user-created schedules!
         </p>
 
-        <div className="relative w-1/2 max-w-screen-sm mx-auto text-gray-400 focus-within:text-222">
+        <div className="relative w-1/2 max-w-screen-sm mx-auto text-gray-400 dark:text-gray-200 focus-within:text-222 dark:focus-within:text-gray-200">
           <MagnifyingGlassIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 size-5 pointer-events-none" />
           <input
             type="text"
@@ -58,7 +58,7 @@ export default function IndexPage() {
               setSearchInput(e.target.value);
               handleSearch(e.target.value);
             }}
-            className="pl-8 pr-2 py-1 border-2 border-gray-400 rounded-lg w-full"
+            className="pl-8 pr-2 py-1 border-2 border-gray-400 dark:border-gray-200 rounded-lg w-full dark:bg-neutral-700"
           />
         </div>
         <div className="max-w-screen-xl px-4 mx-auto">
@@ -74,7 +74,7 @@ export default function IndexPage() {
       ) : (
         <div className="flex flex-col items-center">
           <ExclamationTriangleIcon className="h-12 w-12 text-gray-400 animate-pulse" />
-          <h1 className="mt-4 text-xl font-syne">No schedules found.</h1>
+          <h1 className="mt-4 text-xl font-syne dark:text-white">No schedules found.</h1>
         </div>
       )}
     </>

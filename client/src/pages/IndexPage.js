@@ -7,24 +7,43 @@ export default function IndexPage() {
       <Helmet>
         <title>Home | Scheduleasy</title>
       </Helmet>
-      <h1 className="font-syne font-extrabold text-mint text-center text-4xl mt-7 mb-1 mx-auto w-4/5">
+      <h1 className="font-syne font-extrabold text-mint dark:text-saffron text-center text-4xl mt-7 mb-1 mx-auto w-4/5">
         Manage your class time efficiently with{" "}
-        <span className="font-syne text-slate italic">Scheduleasy</span>.
+        <span className="font-syne text-slate dark:text-pumpkin italic">
+          Scheduleasy
+        </span>
+        .
       </h1>
       <div className="flex justify-center">
-        <svg
-          className="bg-saffron"
-          width="110%"
-          height="70"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          <path
-            id="wavepath"
-            d="M0,0  L110,0C35,150 35,0 0,100z"
-            fill="#fff"
-          ></path>
-        </svg>
+        {document.documentElement.classList.contains("dark") ? (
+          <svg
+            className="bg-saffron"
+            width="110%"
+            height="70"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <path
+              id="wavepath"
+              d="M0,0  L110,0C35,150 35,0 0,100z"
+              fill="#222"
+            ></path>
+          </svg>
+        ) : (
+          <svg
+            className="bg-saffron"
+            width="110%"
+            height="70"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <path
+              id="wavepath"
+              d="M0,0  L110,0C35,150 35,0 0,100z"
+              fill="#fff"
+            ></path>
+          </svg>
+        )}
       </div>
       <div className="bg-saffron text-center md:text-left flex justify-center md:items-center md:gap-10 px-6">
         <svg
@@ -354,19 +373,35 @@ export default function IndexPage() {
         </div>
       </div>
       <div className="flex justify-center">
-        <svg
-          className="bg-white"
-          width="110%"
-          height="70"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          <path
-            id="wavepath"
-            d="M0,0  L110,0C35,150 35,0 0,100z"
-            fill="#2A9D8F"
-          ></path>
-        </svg>
+        {document.documentElement.classList.contains("dark") ? (
+          <svg
+            className="bg-222"
+            width="110%"
+            height="70"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <path
+              id="wavepath"
+              d="M0,0  L110,0C35,150 35,0 0,100z"
+              fill="#2A9D8F"
+            ></path>
+          </svg>
+        ) : (
+          <svg
+            className="bg-white"
+            width="110%"
+            height="70"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+          >
+            <path
+              id="wavepath"
+              d="M0,0  L110,0C35,150 35,0 0,100z"
+              fill="#2A9D8F"
+            ></path>
+          </svg>
+        )}
       </div>
     </>
   );

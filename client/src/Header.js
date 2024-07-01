@@ -9,6 +9,9 @@ import {
   Squares2X2Icon,
   ArrowRightStartOnRectangleIcon,
   ArrowRightEndOnRectangleIcon,
+  SunIcon,
+  MoonIcon,
+  ComputerDesktopIcon,
 } from "@heroicons/react/24/outline";
 
 export default function Header() {
@@ -23,6 +26,16 @@ export default function Header() {
         setUserInfo(userInfo);
       });
     });
+
+    const theme = localStorage.getItem("theme");
+    if (theme) {
+      document.documentElement.classList.remove("dark");
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+    }
   }, []);
 
   function logout() {
@@ -31,6 +44,23 @@ export default function Header() {
       method: "POST",
     });
     setUserInfo(null);
+  }
+
+  function handleTheme(preference) {
+    if (preference === "light") {
+      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove("dark");
+    } else if (preference === "dark") {
+      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add("dark");
+    } else if (preference === "os") {
+      localStorage.removeItem("theme");
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
   }
 
   function toggleMenu() {
@@ -112,11 +142,11 @@ export default function Header() {
 
   return (
     <>
-      <header className="text-slate my-2.5 hidden md:flex justify-between px-4 items-center max-w-screen-xl mx-auto font-syne text-lg">
+      <header className="text-slate dark:text-white my-2.5 hidden md:flex justify-between px-4 items-center max-w-screen-xl mx-auto font-syne text-lg">
         <Link to="/" className="text-3xl font-shrikhand">
           Scheduleasy
         </Link>
-        <nav>
+        <nav className="gap-7 font-semibold">
           {username && (
             <>
               <Link to="/schedules">Schedules</Link>
@@ -124,6 +154,19 @@ export default function Header() {
               <Link to="/" onClick={logout}>
                 Logout
               </Link>
+              <div className="border-l-2 border-gray-300"></div>
+              <SunIcon
+                className="size-6 my-auto cursor-pointer"
+                onClick={() => handleTheme("light")}
+              />
+              <MoonIcon
+                className="size-6 my-auto cursor-pointer"
+                onClick={() => handleTheme("dark")}
+              />
+              <ComputerDesktopIcon
+                className="size-6 my-auto cursor-pointer"
+                onClick={() => handleTheme("os")}
+              />
             </>
           )}
           {!username && (
@@ -136,12 +179,25 @@ export default function Header() {
               >
                 Register
               </Link>
+              <div className="border-l-2 border-gray-300"></div>
+              <SunIcon
+                className="size-6 my-auto cursor-pointer"
+                onClick={() => handleTheme("light")}
+              />
+              <MoonIcon
+                className="size-6 my-auto cursor-pointer"
+                onClick={() => handleTheme("dark")}
+              />
+              <ComputerDesktopIcon
+                className="size-6 my-auto cursor-pointer"
+                onClick={() => handleTheme("os")}
+              />
             </>
           )}
         </nav>
       </header>
       <header className="text-slate my-2.5 flex md:hidden justify-between px-4 md:justify-around md:px-0 items-center max-w-screen-xl mx-auto font-syne text-lg">
-        <Link to="/" className="text-3xl font-shrikhand">
+        <Link to="/" className="text-3xl font-shrikhand dark:text-white">
           Scheduleasy
         </Link>
         <nav>
@@ -149,9 +205,9 @@ export default function Header() {
             <>
               <button onClick={() => setPopUpMenu(!popUpMenu)}>
                 {popUpMenu ? (
-                  <XMarkIcon className="size-8 text-222" />
+                  <XMarkIcon className="size-8 text-222 dark:text-white" />
                 ) : (
-                  <Bars3Icon className="size-8 text-222" />
+                  <Bars3Icon className="size-8 text-222 dark:text-white" />
                 )}
               </button>
               {popUpMenu && toggleMenuLoggedIn()}
@@ -161,9 +217,9 @@ export default function Header() {
             <>
               <button onClick={() => setPopUpMenu(!popUpMenu)}>
                 {popUpMenu ? (
-                  <XMarkIcon className="size-8 text-222" />
+                  <XMarkIcon className="size-8 text-222 dark:text-white" />
                 ) : (
-                  <Bars3Icon className="size-8 text-222" />
+                  <Bars3Icon className="size-8 text-222 dark:text-white" />
                 )}
               </button>
               {popUpMenu && toggleMenu()}

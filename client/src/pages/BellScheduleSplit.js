@@ -17,12 +17,12 @@ const BellScheduleSplit = ({ scheduleInfo }) => {
 
   return (
     <div className="truncate">
-      <table className="w-full max-w-sm m-auto">
+      <table className="w-full max-w-sm m-auto dark:text-neutral-200">
         <tbody>
           {scheduleInfo.periods?.map((period, index) => (
             <tr
               key={index}
-              className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
+              className={index % 2 === 0 ? "bg-gray-100 dark:bg-neutral-600" : "bg-white dark:bg-neutral-700"}
             >
               <td className="px-4 py-1.5">{period.name}</td>
               <td className="px-4 py-1.5 text-right">

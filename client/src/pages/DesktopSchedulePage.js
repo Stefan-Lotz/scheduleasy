@@ -27,14 +27,14 @@ const DesktopSchedulePage = ({
 
   return (
     <Split
-      className="rounded-md border-solid border-8 border-neutral-200 overflow-hidden"
+      className="rounded-md border-solid border-8 border-neutral-200 dark:border-neutral-700 overflow-hidden"
       direction="vertical"
       sizes={[75, 25]}
       style={{ height: "calc(100vh - 56px)" }}
       minSize={[100, 0]}
     >
-      <div className="overflow-hidden text-center flex flex-col justify-center font-monda text-2xl">
-        <h1 className="my-2.5 mx-auto font-syne py-3 px-3 justify-center text-3xl rounded-full border-solid border-2 border-neutral-300 bg-white">
+      <div className="overflow-hidden text-center flex flex-col justify-center font-monda text-2xl dark:text-white">
+        <h1 className="my-2.5 mx-auto font-syne py-3 px-3 justify-center text-3xl rounded-full border-solid border-2 border-neutral-300 dark:border-neutral-500 bg-white dark:bg-222">
           {scheduleInfo.title}
         </h1>
         <h2 className="my-2.5">Current period: {currentPeriodInfo.status}</h2>
@@ -48,7 +48,7 @@ const DesktopSchedulePage = ({
       <Split className="flex" minSize={0}>
         <div>
           <div className="flex justify-center">
-            <ExclamationCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
+            <ExclamationCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
           </div>
           <AnnouncementsSplit
             scheduleInfo={scheduleInfo}
@@ -63,13 +63,13 @@ const DesktopSchedulePage = ({
         </div>
         <div>
           <div className="flex justify-center">
-            <InformationCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
+            <InformationCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
           </div>
           <BellScheduleSplit scheduleInfo={scheduleInfo} />
         </div>
         <div>
           <div className="flex justify-center">
-            <EllipsisHorizontalCircleIcon className="w-6 h-6 my-2 hover:animate-spin" />
+            <EllipsisHorizontalCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
           </div>
           <InformationSplit scheduleInfo={scheduleInfo} userInfo={userInfo} />
         </div>

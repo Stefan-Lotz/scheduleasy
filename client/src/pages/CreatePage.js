@@ -52,7 +52,7 @@ export default function CreatePage() {
   }
 
   return (
-    <div className="font-syne">
+    <div className="font-syne dark:text-white">
       <Helmet>
         <title>Create | Scheduleasy</title>
       </Helmet>
@@ -66,7 +66,7 @@ export default function CreatePage() {
         <div>
           <label
             htmlFor="title"
-            className="block mb-2 text-sm font-medium text-222"
+            className="block mb-2 text-sm font-medium text-222 dark:text-white"
           >
             Choose a title.
           </label>
@@ -74,18 +74,18 @@ export default function CreatePage() {
             type="text"
             placeholder={"My Awesome Schedule"}
             id="title"
-            className="bg-gray-50 border border-gray-300 text-222 text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+            className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
             value={title}
             onChange={(ev) => setTitle(ev.target.value)}
           />
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-gray-500 dark:text-neutral-400">
             Your schedule's title will be publicly displayed.
           </p>
         </div>
         <div>
           <label
             htmlFor="about"
-            className="block mb-2 text-sm font-medium text-222"
+            className="block mb-2 text-sm font-medium text-222 dark:text-white"
           >
             Write a short decription of your schedule.
           </label>
@@ -93,19 +93,19 @@ export default function CreatePage() {
             type="text"
             placeholder={"This is the coolest schedule ever created."}
             id="about"
-            className="bg-gray-50 border border-gray-300 text-222 text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+            className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
             value={about}
             maxLength="100"
             onChange={(ev) => setAbout(ev.target.value)}
           />
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-gray-500 dark:text-neutral-400">
             (Maximum 100 characters.)
           </p>
         </div>
         <div>
           <label
             htmlFor="numPeriods"
-            className="block mb-2 text-sm font-medium text-222"
+            className="block mb-2 text-sm font-medium text-222 dark:text-white"
           >
             Choose how many periods your schedule has.
           </label>
@@ -114,22 +114,22 @@ export default function CreatePage() {
             placeholder={"Number of periods"}
             id="numPeriods"
             value={numPeriods}
-            className="bg-gray-50 border font-sans border-gray-300 text-222 text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+            className="bg-gray-50 border font-sans border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
             onChange={handleNumPeriodsChange}
           />
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-gray-500 dark:text-neutral-400">
             Periods such as "lunch" or "break" should also be accounted for.
           </p>
         </div>
         {periods.map((period, index) => (
           <div
             key={index}
-            className="grid gap-4 bg-gray-50 border border-gray-300 rounded-lg p-3 font-sans"
+            className="grid gap-4 bg-gray-50 border border-gray-300 dark:bg-transparent dark:text-white rounded-lg p-3 font-sans"
           >
             <div>
               <label
                 htmlFor={`name${index}`}
-                className="block mb-2 text-sm font-medium text-222"
+                className="block mb-2 text-sm font-medium text-222 dark:text-white"
               >
                 Period {index + 1} Name
               </label>
@@ -137,7 +137,7 @@ export default function CreatePage() {
                 type="text"
                 id={`name${index}`}
                 placeholder={`Period ${index + 1}`}
-                className="bg-gray-50 border border-gray-300 text-222 text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
                 value={period.name}
                 onChange={(ev) => handlePeriodsChange(ev, index, "name")}
               />
@@ -145,14 +145,14 @@ export default function CreatePage() {
             <div className="">
               <label
                 htmlFor={`startTime${index}`}
-                className="block mb-2 text-sm font-medium text-222"
+                className="block mb-2 text-sm font-medium text-222 dark:text-white"
               >
                 Start Time {index + 1}
               </label>
               <input
                 type="time"
                 id={`startTime${index}`}
-                className="bg-gray-50 border border-gray-300 text-222 text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
                 value={period.startTime}
                 onChange={(ev) => handlePeriodsChange(ev, index, "startTime")}
               />
@@ -160,14 +160,14 @@ export default function CreatePage() {
             <div className="">
               <label
                 htmlFor={`endTime${index}`}
-                className="block mb-2 text-sm font-medium text-222"
+                className="block mb-2 text-sm font-medium text-222 dark:text-white"
               >
                 End Time {index + 1}
               </label>
               <input
                 type="time"
                 id={`endTime${index}`}
-                className="bg-gray-50 border border-gray-300 text-222 text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
                 value={period.endTime}
                 onChange={(ev) => handlePeriodsChange(ev, index, "endTime")}
               />
@@ -177,12 +177,12 @@ export default function CreatePage() {
         <div>
           <label
             htmlFor="url"
-            className="block mb-2 text-sm font-medium text-222"
+            className="block mb-2 text-sm font-medium text-222 dark:text-white"
           >
             Choose a custom URL for easy sharing.
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none text-gray-500 text-sm">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-2.5 pointer-events-none text-gray-500 dark:text-neutral-400 text-sm">
               <p>scheduleasy.org/schedule/</p>
             </div>
             <input
@@ -191,17 +191,17 @@ export default function CreatePage() {
               id="url"
               pattern="[A-Za-z]*"
               value={url}
-              className="bg-gray-50 border border-gray-300 text-222 text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full ps-[180px] p-2.5"
+              className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full ps-[176px] p-2.5"
               onChange={(ev) => setURL(ev.target.value)}
             />
           </div>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-gray-500 dark:text-neutral-400">
             Letters only. This cannot be changed.
           </p>
         </div>
         <div>
           <label
-            className="block mb-2 text-sm font-medium text-222"
+            className="block mb-2 text-sm font-medium text-222 dark:text-white"
             htmlFor="file"
           >
             Choose a cover image.
@@ -209,10 +209,10 @@ export default function CreatePage() {
           <input
             type="file"
             id="file"
-            className="block w-full text-sm text-222 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:border-0 file:bg-gray-600 file:py-[7px] file:text-white file:px-3 hover:file:bg-gray-700 file:mr-3"
+            className="block w-full text-sm text-222 dark:bg-transparent dark:text-white border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:border-0 file:bg-gray-600 file:py-[7px] file:text-white file:px-3 hover:file:bg-gray-700 file:mr-3"
             onChange={(ev) => setFiles(ev.target.files)}
           />
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
             PNG or JPG (Suggested size: 150 x 150px).
           </p>
         </div>
