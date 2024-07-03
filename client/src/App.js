@@ -10,11 +10,12 @@ import SchedulesPage from "./pages/SchedulesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import AboutPage from "./pages/AboutPage";
 import { UserContextProvider } from "./UserContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "os");
+
   useEffect(() => {
-    const theme = localStorage.getItem("theme");
     if (theme) {
       document.documentElement.classList.remove("dark");
       if (theme === "dark") {
@@ -25,22 +26,41 @@ function App() {
     }
   }, []);
 
-  const handleTheme = (preference) => {
-    if (preference === "light") {
-      localStorage.setItem("theme", "light");
-      document.documentElement.classList.remove("dark");
-    } else if (preference === "dark") {
+  const handleTheme = (currentTheme) => {
+    let nextTheme;
+    if (currentTheme === "light") {
+      nextTheme = "dark";
       localStorage.setItem("theme", "dark");
       document.documentElement.classList.add("dark");
-    } else if (preference === "os") {
+    } else if (currentTheme === "dark") {
+      nextTheme = "os";
       localStorage.removeItem("theme");
       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
         document.documentElement.classList.add("dark");
       } else {
         document.documentElement.classList.remove("dark");
       }
+    } else {
+      nextTheme = "light";
+      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove("dark");
     }
+    return nextTheme;
   };
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.classList.remove("dark");
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setTheme("os");
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
 
   return (
     <UserContextProvider>

@@ -17,6 +17,13 @@ import {
 const Header = ({ handleTheme }) => {
   const { userInfo, setUserInfo } = useContext(UserContext);
   const [popUpMenu, setPopUpMenu] = useState(false);
+  const [count, setCount] = useState("0");
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "os");
+
+  const handleThemeClick = () => {
+    const nextTheme = handleTheme(theme);
+    setTheme(nextTheme);
+  };
 
   useEffect(() => {
     fetch("http://localhost:4000/profile", {
@@ -39,28 +46,28 @@ const Header = ({ handleTheme }) => {
   function toggleMenu() {
     return (
       <div
-        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-lg"
+        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-lg z-10 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
         id="menu"
       >
         <Link
           to="/"
-          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
+          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
         >
-          <HomeIcon className="size-5 mt-[-2px]" />
+          <HomeIcon className="size-5 -mt-[3px]" />
           Home
         </Link>
         <Link
           to="/schedules"
-          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
+          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
         >
           <Squares2X2Icon className="size-5" />
           Schedules
         </Link>
         <Link
           to="/login"
-          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
+          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
         >
-          <ArrowRightEndOnRectangleIcon className="size-5 mt-[-3px]" />
+          <ArrowRightEndOnRectangleIcon className="size-5" />
           Log In
         </Link>
         <Link
@@ -69,6 +76,14 @@ const Header = ({ handleTheme }) => {
         >
           Get Started
         </Link>
+        <button
+          onClick={handleThemeClick}
+          className="size-6 my-auto cursor-pointer mx-auto"
+        >
+          {theme === "light" && <SunIcon />}
+          {theme === "dark" && <MoonIcon />}
+          {theme === "os" && <ComputerDesktopIcon />}
+        </button>
       </div>
     );
   }
@@ -76,26 +91,26 @@ const Header = ({ handleTheme }) => {
   function toggleMenuLoggedIn() {
     return (
       <div
-        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-lg"
+        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-lg z-10 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
         id="menu"
       >
         <Link
           to="/"
-          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
+          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
         >
-          <HomeIcon className="size-5 mt-[-2px]" />
+          <HomeIcon className="size-5 -mt-[3px]" />
           Home
         </Link>
         <Link
           to="/create"
-          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
+          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
         >
           <PlusCircleIcon className="size-5" />
           Create schedule
         </Link>
         <Link
           to="/schedules"
-          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
+          className="hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
         >
           <Squares2X2Icon className="size-5" />
           Schedules
@@ -104,8 +119,16 @@ const Header = ({ handleTheme }) => {
           onClick={logout}
           className="text-left hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
         >
-          <ArrowRightStartOnRectangleIcon className="size-5 mt-[-3px]" />
+          <ArrowRightStartOnRectangleIcon className="size-5" />
           Logout
+        </button>
+        <button
+          onClick={handleThemeClick}
+          className="size-6 my-auto cursor-pointer mx-auto"
+        >
+          {theme === "light" && <SunIcon />}
+          {theme === "dark" && <MoonIcon />}
+          {theme === "os" && <ComputerDesktopIcon />}
         </button>
       </div>
     );
@@ -128,18 +151,14 @@ const Header = ({ handleTheme }) => {
                 Logout
               </Link>
               <div className="border-l-2 border-gray-300"></div>
-              <SunIcon
+              <button
+                onClick={handleThemeClick}
                 className="size-6 my-auto cursor-pointer"
-                onClick={() => handleTheme("light")}
-              />
-              <MoonIcon
-                className="size-6 my-auto cursor-pointer"
-                onClick={() => handleTheme("dark")}
-              />
-              <ComputerDesktopIcon
-                className="size-6 my-auto cursor-pointer"
-                onClick={() => handleTheme("os")}
-              />
+              >
+                {theme === "light" && <SunIcon />}
+                {theme === "dark" && <MoonIcon />}
+                {theme === "os" && <ComputerDesktopIcon />}
+              </button>
             </>
           )}
           {!username && (
@@ -153,18 +172,14 @@ const Header = ({ handleTheme }) => {
                 Register
               </Link>
               <div className="border-l-2 border-gray-300"></div>
-              <SunIcon
+              <button
+                onClick={handleThemeClick}
                 className="size-6 my-auto cursor-pointer"
-                onClick={() => handleTheme("light")}
-              />
-              <MoonIcon
-                className="size-6 my-auto cursor-pointer"
-                onClick={() => handleTheme("dark")}
-              />
-              <ComputerDesktopIcon
-                className="size-6 my-auto cursor-pointer"
-                onClick={() => handleTheme("os")}
-              />
+              >
+                {theme === "light" && <SunIcon />}
+                {theme === "dark" && <MoonIcon />}
+                {theme === "os" && <ComputerDesktopIcon />}
+              </button>
             </>
           )}
         </nav>

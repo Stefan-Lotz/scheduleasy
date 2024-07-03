@@ -24,11 +24,16 @@ const MobileSchedulePage = ({
 
   return (
     <Split
-      className="rounded-md border-solid border-8 border-neutral-200 dark:border-neutral-500 overflow-hidden"
+      className="rounded-md border-solid border-8 border-neutral-200 dark:border-neutral-700 overflow-hidden"
       direction="vertical"
       sizes={[75, 25]}
       style={{ height: "calc(100vh - 56px)" }}
       minSize={[100, 0]}
+      gutter={(index, direction) => {
+        const gutter = document.createElement("div");
+        gutter.className = `gutter gutter-${direction} bg-[#e5e5e5] dark:bg-[#404040]`;
+        return gutter;
+      }}
     >
       <div className="overflow-hidden text-center flex flex-col justify-center font-monda text-2xl dark:text-white">
         <h1 className="my-2.5 mx-auto font-syne py-3 px-3 justify-center text-3xl rounded-full border-solid border-2 border-neutral-300 dark:border-neutral-500 bg-white dark:bg-transparent">
@@ -42,14 +47,14 @@ const MobileSchedulePage = ({
           <p>This is your schedule!</p>
         )}
       </div>
-      <div>
+      <div className="overflow-y-scroll">
         <div className="flex justify-evenly">
           <button
             className={
               "py-3 rounded-b-lg block leading-3 border border-solid w-36 " +
               (openTab === 1
-                ? "text-black bg-neutral-200"
-                : "text-neutral-600 dark:text-white border-t-white")
+                ? "text-black bg-neutral-200 dark:bg-neutral-700 dark:text-white dark:border-t-neutral-700 dark:border-neutral-500"
+                : "text-neutral-600 border-t-white dark:border-t-transparent dark:border-neutral-600 dark:text-white")
             }
             onClick={(e) => {
               e.preventDefault();
@@ -62,8 +67,8 @@ const MobileSchedulePage = ({
             className={
               "py-3 rounded-b-lg block leading-3 border border-solid w-36 " +
               (openTab === 2
-                ? "text-black bg-neutral-200"
-                : "text-neutral-600 dark:text-white border-t-white")
+                ? "text-black bg-neutral-200 dark:bg-neutral-700 dark:text-white dark:border-t-neutral-700 dark:border-neutral-500"
+                : "text-neutral-600 border-t-white dark:border-t-transparent dark:border-neutral-600 dark:text-white")
             }
             onClick={(e) => {
               e.preventDefault();
@@ -76,8 +81,8 @@ const MobileSchedulePage = ({
             className={
               "py-3 rounded-b-lg block leading-3 border border-solid w-36 " +
               (openTab === 3
-                ? "text-black bg-neutral-200"
-                : "text-neutral-600 dark:text-white border-t-white")
+                ? "text-black bg-neutral-200 dark:bg-neutral-700 dark:text-white dark:border-t-neutral-700 dark:border-neutral-500"
+                : "text-neutral-600 border-t-white dark:border-t-transparent dark:border-neutral-600 dark:text-white")
             }
             onClick={(e) => {
               e.preventDefault();
@@ -89,28 +94,26 @@ const MobileSchedulePage = ({
         </div>
         <div className="relative flex flex-col min-w-0 break-words bg-white dark:bg-transparent w-full mb-6 rounded">
           <div className="px-4 py-5 flex-auto">
-            <div className="tab-content tab-space">
-              <div className={openTab === 1 ? "block" : "hidden"}>
-                <AnnouncementsSplit
-                  scheduleInfo={scheduleInfo}
-                  handleMessageSubmit={handleMessageSubmit}
-                  newMessage={newMessage}
-                  setNewMessage={setNewMessage}
-                  messageContainerRef={messageContainerRef}
-                  sendIsHovered={sendIsHovered}
-                  setSendIsHovered={setSendIsHovered}
-                  updateCurrentPeriod={updateCurrentPeriod}
-                />
-              </div>
-              <div className={openTab === 2 ? "block" : "hidden"}>
-                <BellScheduleSplit scheduleInfo={scheduleInfo} />
-              </div>
-              <div className={openTab === 3 ? "block" : "hidden"}>
-                <InformationSplit
-                  scheduleInfo={scheduleInfo}
-                  userInfo={userInfo}
-                />
-              </div>
+            <div className={openTab === 1 ? "block" : "hidden"}>
+              <AnnouncementsSplit
+                scheduleInfo={scheduleInfo}
+                handleMessageSubmit={handleMessageSubmit}
+                newMessage={newMessage}
+                setNewMessage={setNewMessage}
+                messageContainerRef={messageContainerRef}
+                sendIsHovered={sendIsHovered}
+                setSendIsHovered={setSendIsHovered}
+                updateCurrentPeriod={updateCurrentPeriod}
+              />
+            </div>
+            <div className={openTab === 2 ? "block" : "hidden"}>
+              <BellScheduleSplit scheduleInfo={scheduleInfo} />
+            </div>
+            <div className={openTab === 3 ? "block" : "hidden"}>
+              <InformationSplit
+                scheduleInfo={scheduleInfo}
+                userInfo={userInfo}
+              />
             </div>
           </div>
         </div>

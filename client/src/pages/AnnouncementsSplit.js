@@ -18,7 +18,7 @@ const AnnouncementsSplit = ({
   return (
     <div className="relative h-full flex flex-col">
       <div
-        className="flex-1 overflow-y-auto overflow-x-hidden mb-2"
+        className="flex-1 overflow-y-auto overflow-x-hidden mb-2 scrollbar scrollbar-track-transparent scrollbar-thumb-neutral-400"
         ref={messageContainerRef}
       >
         <div className="flex flex-col h-full justify-between">
@@ -38,12 +38,12 @@ const AnnouncementsSplit = ({
                 type="text"
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Send an announcement..."
-                className="w-full rounded-3xl border-2 p-2 border-gray-300 dark:border-neutral-500 dark:bg-transparent dark:text-white resize-y overflow-y-auto mb-10"
+                className="w-full rounded-3xl border-2 p-2 border-gray-300 dark:border-neutral-500 dark:bg-transparent dark:text-white resize-y overflow-y-auto md:mb-10"
               />
               <button
                 type="button"
                 onClick={handleMessageSubmit}
-                className="bg-mint p-1 text-white rounded-full flex hover:bg-slate mb-10"
+                className="bg-mint p-1 text-white rounded-full flex hover:bg-slate md:mb-10"
                 onMouseEnter={() => setSendIsHovered(true)}
                 onMouseLeave={() => setSendIsHovered(false)}
               >

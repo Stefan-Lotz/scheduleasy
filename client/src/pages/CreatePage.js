@@ -121,59 +121,61 @@ export default function CreatePage() {
             Periods such as "lunch" or "break" should also be accounted for.
           </p>
         </div>
-        {periods.map((period, index) => (
-          <div
-            key={index}
-            className="grid gap-4 bg-gray-50 border border-gray-300 dark:bg-transparent dark:text-white rounded-lg p-3 font-sans"
-          >
-            <div>
-              <label
-                htmlFor={`name${index}`}
-                className="block mb-2 text-sm font-medium text-222 dark:text-white"
-              >
-                Period {index + 1} Name
-              </label>
-              <input
-                type="text"
-                id={`name${index}`}
-                placeholder={`Period ${index + 1}`}
-                className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
-                value={period.name}
-                onChange={(ev) => handlePeriodsChange(ev, index, "name")}
-              />
+        <div className="max-h-[560px] overflow-y-scroll scrollbar scrollbar-track-transparent scrollbar-thumb-gray-500">
+          {periods.map((period, index) => (
+            <div
+              key={index}
+              className="grid gap-4 bg-gray-50 border border-gray-300 dark:bg-transparent dark:text-white rounded-lg p-3 font-sans mb-4"
+            >
+              <div>
+                <label
+                  htmlFor={`name${index}`}
+                  className="block mb-2 text-sm font-medium text-222 dark:text-white"
+                >
+                  Period {index + 1} Name
+                </label>
+                <input
+                  type="text"
+                  id={`name${index}`}
+                  placeholder={`Period ${index + 1}`}
+                  className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                  value={period.name}
+                  onChange={(ev) => handlePeriodsChange(ev, index, "name")}
+                />
+              </div>
+              <div className="">
+                <label
+                  htmlFor={`startTime${index}`}
+                  className="block mb-2 text-sm font-medium text-222 dark:text-white"
+                >
+                  Start Time {index + 1}
+                </label>
+                <input
+                  type="time"
+                  id={`startTime${index}`}
+                  className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                  value={period.startTime}
+                  onChange={(ev) => handlePeriodsChange(ev, index, "startTime")}
+                />
+              </div>
+              <div className="">
+                <label
+                  htmlFor={`endTime${index}`}
+                  className="block mb-2 text-sm font-medium text-222 dark:text-white"
+                >
+                  End Time {index + 1}
+                </label>
+                <input
+                  type="time"
+                  id={`endTime${index}`}
+                  className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                  value={period.endTime}
+                  onChange={(ev) => handlePeriodsChange(ev, index, "endTime")}
+                />
+              </div>
             </div>
-            <div className="">
-              <label
-                htmlFor={`startTime${index}`}
-                className="block mb-2 text-sm font-medium text-222 dark:text-white"
-              >
-                Start Time {index + 1}
-              </label>
-              <input
-                type="time"
-                id={`startTime${index}`}
-                className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
-                value={period.startTime}
-                onChange={(ev) => handlePeriodsChange(ev, index, "startTime")}
-              />
-            </div>
-            <div className="">
-              <label
-                htmlFor={`endTime${index}`}
-                className="block mb-2 text-sm font-medium text-222 dark:text-white"
-              >
-                End Time {index + 1}
-              </label>
-              <input
-                type="time"
-                id={`endTime${index}`}
-                className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
-                value={period.endTime}
-                onChange={(ev) => handlePeriodsChange(ev, index, "endTime")}
-              />
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
         <div>
           <label
             htmlFor="url"

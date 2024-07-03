@@ -59,7 +59,10 @@ export default function RegisterPage() {
         </Link>
         <div className="my-10 text-center">
           <h1 className="font-syne font-bold text-4xl text-slate">Sign Up</h1>
-          <form className="max-w-sm mx-auto py-5" onSubmit={register}>
+          <form
+            className="max-w-sm mx-auto py-5 p-4 md:p-0"
+            onSubmit={register}
+          >
             <div className="relative">
               <input
                 type="text"
