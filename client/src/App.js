@@ -11,6 +11,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import AboutPage from "./pages/AboutPage";
 import { UserContextProvider } from "./UserContext";
 import { useEffect, useState } from "react";
+import EditSchedule from "./pages/EditSchedule";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "os");
@@ -69,6 +70,7 @@ function App() {
           <Route index element={<IndexPage />} />
           <Route path="/schedules" element={<SchedulesPage />} />
           <Route path="/create" element={<CreatePage />} />
+          <Route path="/schedule/:url/edit" element={<EditSchedule />} />
           <Route path="/about" element={<AboutPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />

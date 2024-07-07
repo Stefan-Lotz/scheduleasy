@@ -5,6 +5,7 @@ import { PencilSquareIcon as EditOutline } from "@heroicons/react/24/outline";
 import { PencilSquareIcon as EditSolid } from "@heroicons/react/24/solid";
 import { TrashIcon as TrashOutline } from "@heroicons/react/24/outline";
 import { TrashIcon as TrashSolid } from "@heroicons/react/24/solid";
+import { Link } from "react-router-dom";
 
 const InformationSplit = ({ scheduleInfo, userInfo }) => {
   const [editIsHovered, setEditIsHovered] = useState(false);
@@ -28,73 +29,39 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
           <div>
             <hr className="my-2" />
             <div className="flex justify-around">
-              <div
+              <Link
+                to={`/schedule/${scheduleInfo.url}/edit`}
                 className="group cursor-pointer relative"
                 onMouseEnter={() => setEditIsHovered(true)}
                 onMouseLeave={() => setEditIsHovered(false)}
+                title="Edit"
               >
                 {editIsHovered ? (
                   <EditSolid className="size-6" />
                 ) : (
                   <EditOutline className="size-6" />
                 )}
-                <div className="opacity-0  z-10 -mt-16 -ml-[11px] bg-gray-800 text-white text-center text-xs rounded-lg py-2 absolute group-hover:opacity-100 px-3 pointer-events-none">
-                  Edit
-                  <svg
-                    className="absolute text-gray-800 h-2 w-full left-0 top-full"
-                    x="0px"
-                    y="0px"
-                    viewBox="0 0 255 255"
-                  >
-                    <polygon
-                      className="fill-current"
-                      points="0,0 127.5,127.5 255,0"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div
+              </Link>
+              <Link
+                to=""
                 className="group cursor-pointer relative"
                 onMouseEnter={() => setTrashIsHovered(true)}
                 onMouseLeave={() => setTrashIsHovered(false)}
+                title="Delete"
               >
                 {trashIsHovered ? (
                   <TrashSolid className="size-6" />
                 ) : (
                   <TrashOutline className="size-6" />
                 )}
-                <div className="opacity-0  z-10 -mt-16 -ml-[18px] bg-gray-800 text-white text-center text-xs rounded-lg py-2 absolute group-hover:opacity-100 px-3 pointer-events-none">
-                  Delete
-                  <svg
-                    className="absolute text-gray-800 h-2 w-full left-0 top-full"
-                    x="0px"
-                    y="0px"
-                    viewBox="0 0 255 255"
-                  >
-                    <polygon
-                      className="fill-current"
-                      points="0,0 127.5,127.5 255,0"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div className="group cursor-pointer relative">
+              </Link>
+              <Link
+                to=""
+                className="group cursor-pointer relative"
+                title="Link"
+              >
                 <LinkIcon className="size-6" />
-                <div className="opacity-0  z-10 -mt-16 -ml-[12px] bg-gray-800 text-white text-center text-xs rounded-lg py-2 absolute group-hover:opacity-100 px-3 pointer-events-none">
-                  Link
-                  <svg
-                    className="absolute text-gray-800 h-2 w-full left-0 top-full"
-                    x="0px"
-                    y="0px"
-                    viewBox="0 0 255 255"
-                  >
-                    <polygon
-                      className="fill-current"
-                      points="0,0 127.5,127.5 255,0"
-                    />
-                  </svg>
-                </div>
-              </div>
+              </Link>
             </div>
           </div>
         )}
