@@ -214,4 +214,28 @@ app.get("/schedule/:url", async (req, res) => {
   }
 });
 
+app.delete("/schedule/:url", async (req, res) => {
+  try {
+    const { url } = req.params;
+    const { token } = req.cookies;
+
+    jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
+      if (err) return res.status(401).json("Unauthorized");
+
+      const schedule = await ScheduleModel.findOne({ url });
+      if (!schedule) return res.status(404).json("Schedule not found");
+
+      if (schedule.author.toString() !== info.id) {
+        return res.status(403).json("Forbidden");
+      }
+
+      await ScheduleModel.deleteOne({ _id: schedule._id });
+      res.json({ message: "Schedule deleted" });
+    });
+  } catch (error) {
+    console.error("Error deleting schedule:", error);
+    res.status(500).json("Internal server error");
+  }
+});
+
 app.listen(4000);

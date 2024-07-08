@@ -6,17 +6,45 @@ import { PencilSquareIcon as EditSolid } from "@heroicons/react/24/solid";
 import { TrashIcon as TrashOutline } from "@heroicons/react/24/outline";
 import { TrashIcon as TrashSolid } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
+import ConfirmDeleteModal from "../ConfirmDeleteModal";
 
 const InformationSplit = ({ scheduleInfo, userInfo }) => {
   const [editIsHovered, setEditIsHovered] = useState(false);
   const [trashIsHovered, setTrashIsHovered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  if (!scheduleInfo) {
-    return null;
+  function deleteSchedule() {
+    setIsModalOpen(true);
+  }
+
+  async function confirmDelete() {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/schedule/${scheduleInfo.url}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        window.location.href = "/schedules";
+      } else {
+        console.error("Failed to delete schedule");
+      }
+    } catch (error) {
+      console.error("Error deleting schedule:", error);
+    }
   }
 
   return (
     <div>
+      {isModalOpen && (
+        <ConfirmDeleteModal
+          scheduleTitle={scheduleInfo.title}
+          onDelete={confirmDelete}
+          onCancel={() => setIsModalOpen(false)}
+        />
+      )}
       <div className="flex flex-col text-left ml-5 mr-5 gap-1 font-syne dark:text-white">
         <p>Created by: {scheduleInfo.author.username}</p>
         <p>{scheduleInfo.about}</p>
@@ -42,8 +70,8 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
                   <EditOutline className="size-6" />
                 )}
               </Link>
-              <Link
-                to=""
+              <button
+                onClick={deleteSchedule}
                 className="group cursor-pointer relative"
                 onMouseEnter={() => setTrashIsHovered(true)}
                 onMouseLeave={() => setTrashIsHovered(false)}
@@ -54,7 +82,7 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
                 ) : (
                   <TrashOutline className="size-6" />
                 )}
-              </Link>
+              </button>
               <Link
                 to=""
                 className="group cursor-pointer relative"
