@@ -12,11 +12,36 @@ export default function Footer() {
           <p className="font-semibold text-222 dark:text-neutral-200">
             Resources
           </p>
-          <Link to="/schedules">Schedules</Link>
-          <Link to="/">Home</Link>
-          <Link to="/login">Log in</Link>
-          <Link to="/about">About</Link>
-          <Link to="/register">Register</Link>
+          <Link
+            to="/schedules"
+            className="hover:text-neutral-700 dark:hover:text-neutral-300"
+          >
+            Schedules
+          </Link>
+          <Link
+            to="/"
+            className="hover:text-neutral-700 dark:hover:text-neutral-300"
+          >
+            Home
+          </Link>
+          <Link
+            to="/login"
+            className="hover:text-neutral-700 dark:hover:text-neutral-300"
+          >
+            Log in
+          </Link>
+          <Link
+            to="/about"
+            className="hover:text-neutral-700 dark:hover:text-neutral-300"
+          >
+            About
+          </Link>
+          <Link
+            to="/register"
+            className="hover:text-neutral-700 dark:hover:text-neutral-300"
+          >
+            Register
+          </Link>
         </div>
         <div className="text-neutral-500 dark:text-neutral-400 sm:inline hidden">
           Created by Stefan in 2024!

@@ -218,7 +218,7 @@ export default function CreatePage() {
             PNG or JPG (Suggested size: 150 x 150px).
           </p>
         </div>
-        <button className="mx-auto rounded-2xl py-2 px-4 bg-mint text-white font-shrikhand text-xl">
+        <button className="mx-auto rounded-2xl py-2 px-4 bg-mint text-white font-shrikhand text-xl hover:bg-[#1f756a]">
           Create Schedule!
         </button>
       </form>

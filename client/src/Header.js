@@ -167,7 +167,7 @@ const Header = ({ handleTheme }) => {
               <Link to="/login">Login</Link>
               <Link
                 to="/register"
-                className="bg-mint px-3 text-white rounded-full"
+                className="bg-mint px-3 text-white rounded-full hover:bg-[#1f756a]"
               >
                 Register
               </Link>

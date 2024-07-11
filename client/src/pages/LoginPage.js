@@ -110,7 +110,7 @@ export default function LoginPage() {
                 )}
               </div>
             </div>
-            <button className="bg-salmon px-10 py-3 rounded-2xl font-shrikhand text-white text-2xl">
+            <button className="bg-salmon px-10 py-3 rounded-2xl font-shrikhand text-white text-2xl hover:bg-[#e45c3b]">
               Login
             </button>
           </form>
@@ -122,7 +122,7 @@ export default function LoginPage() {
           </div>
           <Link
             to="/register"
-            className="bg-mint py-1 px-4 text-white font-syne rounded-full"
+            className="bg-mint py-1 px-4 text-white font-syne rounded-full hover:bg-slate"
           >
             Sign Up
           </Link>

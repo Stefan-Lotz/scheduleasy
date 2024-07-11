@@ -34,7 +34,7 @@ export default function NotFoundPage() {
             may be broken or outdated.
           </h2>
           <Link to="/">
-            <button className="bg-salmon mt-10 px-10 py-3 rounded-2xl font-shrikhand text-white text-xl">
+            <button className="bg-salmon mt-10 px-10 py-3 rounded-2xl font-shrikhand text-white text-xl hover:bg-[#e45c3b]">
               Scheduleasy Home
             </button>
           </Link>
