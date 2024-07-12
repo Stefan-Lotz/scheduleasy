@@ -52,21 +52,6 @@ div.schedule {
   grid-template-columns: 0.5fr 2fr;
 }
 
-div.info p {
-  line-height: 7px;
-}
-
-button.button1 {
-  cursor: pointer;
-  width: 100%;
-  display: block;
-  background-color: #555;
-  border: 0;
-  color: white;
-  border-radius: 5px;
-  padding: 7px 0;
-}
-
 div.error {
   background-color: #f06d6d;
   padding: 5px;
@@ -75,17 +60,6 @@ div.error {
   text-align: center;
   border: 2px solid #e94747;
   color: #fff;
-}
-
-h1.title {
-  text-align: center;
-  display: block;
-  width: 50%;
-  margin: auto;
-  padding: 10px 0px;
-  justify-content: center;
-  border-radius: 25px;
-  border: 3px solid #555;
 }
 
 .gutter {

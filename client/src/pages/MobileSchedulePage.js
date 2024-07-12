@@ -16,7 +16,7 @@ const MobileSchedulePage = ({
   sendIsHovered,
   setSendIsHovered,
 }) => {
-  const [openTab, setOpenTab] = useState(1);
+  const [openTab, setOpenTab] = useState(2);
 
   if (!scheduleInfo) {
     return null;
