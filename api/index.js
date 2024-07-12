@@ -238,4 +238,49 @@ app.delete("/schedule/:url", async (req, res) => {
   }
 });
 
+app.get("/user-schedules", async (req, res) => {
+  const { token } = req.cookies;
+
+  jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
+    if (err) return res.status(401).json("Invalid token");
+
+    try {
+      const schedules = await ScheduleModel.find({ author: info.id });
+      res.json(schedules);
+    } catch (error) {
+      console.error("Error fetching user schedules:", error);
+      res.status(500).json("Server error");
+    }
+  });
+});
+
+app.put("/schedule/:url/link", async (req, res) => {
+  const { url } = req.params;
+  const { linkedSchedule } = req.body;
+  const { token } = req.cookies;
+
+  jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
+    if (err) return res.status(401).json("Invalid token");
+
+    try {
+      const schedule = await ScheduleModel.findOne({ url });
+      if (!schedule) {
+        return res.status(404).json("Schedule not found");
+      }
+
+      if (schedule.author.toString() !== info.id) {
+        return res.status(403).json("Forbidden");
+      }
+
+      schedule.linkedSchedule = linkedSchedule;
+      await schedule.save();
+
+      res.json(schedule);
+    } catch (error) {
+      console.error("Error linking schedule:", error);
+      res.status(500).json("Server error");
+    }
+  });
+});
+
 app.listen(4000);

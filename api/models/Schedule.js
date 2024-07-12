@@ -17,6 +17,7 @@ const ScheduleSchema = new Schema(
       },
     ],
     messages: [{ type: Schema.Types.ObjectId, ref: "UserMessage" }],
+    linkedSchedule: { type: String, required: false },
   },
   {
     timestamps: true,
