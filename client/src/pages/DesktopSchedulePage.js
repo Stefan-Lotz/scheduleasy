@@ -1,8 +1,8 @@
 import React from "react";
 import Split from "react-split";
-import AnnouncementsSplit from "./AnnouncementsSplit";
-import BellScheduleSplit from "./BellScheduleSplit";
-import InformationSplit from "./InformationSplit";
+import AnnouncementsSplit from "../components/AnnouncementsSplit";
+import BellScheduleSplit from "../components/BellScheduleSplit";
+import InformationSplit from "../components/InformationSplit";
 import {
   EllipsisHorizontalCircleIcon,
   ExclamationCircleIcon,

@@ -7,8 +7,8 @@ import { TrashIcon as TrashOutline } from "@heroicons/react/24/outline";
 import { TrashIcon as TrashSolid } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
-import ConfirmDeleteModal from "../ConfirmDeleteModal";
-import LinkScheduleModal from "../LinkScheduleModal";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import LinkScheduleModal from "../components/LinkScheduleModal";
 
 const InformationSplit = ({ scheduleInfo, userInfo }) => {
   const [editIsHovered, setEditIsHovered] = useState(false);
@@ -55,7 +55,7 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
     }
 
     fetchUserSchedules();
-  }, [scheduleInfo.linkedSchedule]);
+  }, [scheduleInfo.linkedSchedule, scheduleInfo.url]);
 
   function deleteSchedule() {
     setIsDeleteModalOpen(true);

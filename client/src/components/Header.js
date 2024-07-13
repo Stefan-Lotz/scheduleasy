@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../UserContext";
 import {
   Bars3Icon,
   XMarkIcon,
@@ -17,7 +17,6 @@ import {
 const Header = ({ handleTheme }) => {
   const { userInfo, setUserInfo } = useContext(UserContext);
   const [popUpMenu, setPopUpMenu] = useState(false);
-  const [count, setCount] = useState("0");
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "os");
 
   const handleThemeClick = () => {
@@ -33,7 +32,7 @@ const Header = ({ handleTheme }) => {
         setUserInfo(userInfo);
       });
     });
-  }, []);
+  }, [setUserInfo]);
 
   function logout() {
     fetch("http://localhost:4000/logout", {

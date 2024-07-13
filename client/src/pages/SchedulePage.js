@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import confetti from "canvas-confetti";
-import Header from "../Header";
+import Header from "../components/Header";
 import DesktopSchedulePage from "./DesktopSchedulePage";
 import MobileSchedulePage from "./MobileSchedulePage";
 
@@ -19,38 +19,6 @@ const SchedulePage = ({ handleTheme }) => {
   const messageContainerRef = useRef(null);
   const [sendIsHovered, setSendIsHovered] = useState(false);
   const width = useScreenWidth();
-
-  useEffect(() => {
-    fetch(`http://localhost:4000/schedule/${url}`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((scheduleInfo) => {
-        if (!scheduleInfo) {
-          navigate("/not-found");
-          return;
-        }
-        setScheduleInfo(scheduleInfo);
-        updateCurrentPeriod(scheduleInfo);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch schedule:", error);
-        navigate("/not-found");
-      });
-  }, [url, navigate]);
-
-  useEffect(() => {
-    if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop =
-        messageContainerRef.current.scrollHeight;
-    }
-  }, [scheduleInfo]);
 
   const handleMessageSubmit = (e) => {
     e.preventDefault();
@@ -81,70 +49,78 @@ const SchedulePage = ({ handleTheme }) => {
       });
   };
 
-  useEffect(() => {
+  const startFireworks = useCallback(() => {
+    const duration = 2500;
+    const interval = 300;
+    const end = Date.now() + duration;
+
     const intervalId = setInterval(() => {
-      updateCurrentPeriod(scheduleInfo);
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [scheduleInfo]);
-
-  const updateCurrentPeriod = (ScheduleInfo) => {
-    const now = new Date();
-    const currentSeconds =
-      now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-
-    let currentPeriod = null;
-    let timeLeft = 0;
-
-    for (const period of ScheduleInfo.periods) {
-      const [startHour, startMinute] = period.startTime.split(":").map(Number);
-      const [endHour, endMinute] = period.endTime.split(":").map(Number);
-
-      const startSeconds = startHour * 3600 + startMinute * 60;
-      const endSeconds = endHour * 3600 + endMinute * 60;
-
-      if (currentSeconds >= startSeconds && currentSeconds < endSeconds) {
-        currentPeriod = period;
-        timeLeft = endSeconds - currentSeconds;
-        break;
+      firework();
+      if (Date.now() > end) {
+        clearInterval(intervalId);
       }
-    }
+    }, interval);
+  }, []);
 
-    if (currentPeriod) {
-      const hours = Math.floor(timeLeft / 3600);
-      const minutes = Math.floor((timeLeft % 3600) / 60);
-      const seconds = timeLeft % 60;
+  const updateCurrentPeriod = useCallback(
+    (scheduleInfo) => {
+      const now = new Date();
+      const currentSeconds =
+        now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
-      let timeLeftString;
+      let currentPeriod = null;
+      let timeLeft = 0;
 
-      if (hours > 0) {
-        timeLeftString = `${hours} hour${
-          hours > 1 ? "s" : ""
-        }, ${minutes} minutes, and ${seconds} seconds left`;
+      for (const period of scheduleInfo.periods) {
+        const [startHour, startMinute] = period.startTime.split(":").map(Number);
+        const [endHour, endMinute] = period.endTime.split(":").map(Number);
+
+        const startSeconds = startHour * 3600 + startMinute * 60;
+        const endSeconds = endHour * 3600 + endMinute * 60;
+
+        if (currentSeconds >= startSeconds && currentSeconds < endSeconds) {
+          currentPeriod = period;
+          timeLeft = endSeconds - currentSeconds;
+          break;
+        }
+      }
+
+      if (currentPeriod) {
+        const hours = Math.floor(timeLeft / 3600);
+        const minutes = Math.floor((timeLeft % 3600) / 60);
+        const seconds = timeLeft % 60;
+
+        let timeLeftString;
+
+        if (hours > 0) {
+          timeLeftString = `${hours} hour${
+            hours > 1 ? "s" : ""
+          }, ${minutes} minutes, and ${seconds} seconds left`;
+        } else {
+          timeLeftString = `${minutes} minutes and ${seconds} seconds left`;
+        }
+
+        setCurrentPeriodInfo({
+          status: currentPeriod.name,
+          timeLeft: timeLeftString,
+        });
+
+        document.title = `${timeLeftString}`;
+
+        if (timeLeft === 1) {
+          setTimeout(startFireworks, 1000);
+        }
       } else {
-        timeLeftString = `${minutes} minutes and ${seconds} seconds left`;
+        setCurrentPeriodInfo({
+          status: "Transition",
+          timeLeft: "",
+        });
+
+        document.title = "Transition period";
       }
-
-      setCurrentPeriodInfo({
-        status: currentPeriod.name,
-        timeLeft: timeLeftString,
-      });
-
-      document.title = `${timeLeftString}`;
-
-      if (timeLeft === 1) {
-        setTimeout(startFireworks, 1000);
-      }
-    } else {
-      setCurrentPeriodInfo({
-        status: "Transition",
-        timeLeft: "",
-      });
-
-      document.title = "Transition period";
-    }
-  };
+    },
+    [startFireworks]
+  );
 
   function firework() {
     confetti({
@@ -169,19 +145,6 @@ const SchedulePage = ({ handleTheme }) => {
     });
   }
 
-  function startFireworks() {
-    const duration = 2500;
-    const interval = 300;
-    const end = Date.now() + duration;
-
-    const intervalId = setInterval(() => {
-      firework();
-      if (Date.now() > end) {
-        clearInterval(intervalId);
-      }
-    }, interval);
-  }
-
   function useScreenWidth() {
     const [width, setWidth] = useState(window.innerWidth);
 
@@ -193,6 +156,48 @@ const SchedulePage = ({ handleTheme }) => {
 
     return width;
   }
+
+  useEffect(() => {
+    fetch(`http://localhost:4000/schedule/${url}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((scheduleInfo) => {
+        if (!scheduleInfo) {
+          navigate("/not-found");
+          return;
+        }
+        setScheduleInfo(scheduleInfo);
+        updateCurrentPeriod(scheduleInfo);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch schedule:", error);
+        navigate("/not-found");
+      });
+  }, [url, navigate, updateCurrentPeriod]);
+
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [scheduleInfo]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (scheduleInfo) {
+        updateCurrentPeriod(scheduleInfo);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [scheduleInfo, updateCurrentPeriod]);
 
   if (!scheduleInfo) return "";
 

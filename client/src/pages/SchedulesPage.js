@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import UserSchedule from "../UserSchedule";
+import UserSchedule from "../components/UserSchedule";
 import { Helmet } from "react-helmet";
 import debounce from "lodash.debounce";
 import {
@@ -12,8 +12,23 @@ export default function IndexPage() {
   const [searchInput, setSearchInput] = useState("");
   const [filteredSchedules, setFilteredSchedules] = useState([]);
 
-  const handleSearch = useCallback(
-    debounce((value) => {
+  const fetchSchedules = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:4000/schedule");
+      const data = await response.json();
+      setSchedules(data);
+      setFilteredSchedules(data);
+    } catch (error) {
+      console.error("Failed to fetch schedules:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSchedules();
+  }, [fetchSchedules]);
+
+  useEffect(() => {
+    const debouncedHandleSearch = debounce((value) => {
       const lowerCaseInput = value.toLowerCase();
       const filtered = schedules.filter((schedule) => {
         return (
@@ -24,18 +39,12 @@ export default function IndexPage() {
         );
       });
       setFilteredSchedules(filtered);
-    }, 300),
-    [schedules]
-  );
-
-  useEffect(() => {
-    fetch("http://localhost:4000/schedule").then((response) => {
-      response.json().then((schedules) => {
-        setSchedules(schedules);
-        setFilteredSchedules(schedules);
-      });
-    });
-  }, []);
+    }, 300);
+    debouncedHandleSearch(searchInput);
+    return () => {
+      debouncedHandleSearch.cancel();
+    };
+  }, [searchInput, schedules]);
 
   return (
     <>
@@ -54,10 +63,7 @@ export default function IndexPage() {
             type="text"
             placeholder="Or search for a schedule..."
             value={searchInput}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-              handleSearch(e.target.value);
-            }}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="pl-8 pr-2 py-1 border-2 border-gray-400 dark:border-gray-200 rounded-lg w-full dark:bg-neutral-700"
           />
         </div>
@@ -74,7 +80,9 @@ export default function IndexPage() {
       ) : (
         <div className="flex flex-col items-center">
           <ExclamationTriangleIcon className="h-12 w-12 text-gray-400 animate-pulse" />
-          <h1 className="mt-4 text-xl font-syne dark:text-white">No schedules found.</h1>
+          <h1 className="mt-4 text-xl font-syne dark:text-white">
+            No schedules found.
+          </h1>
         </div>
       )}
     </>

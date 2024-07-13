@@ -1,7 +1,7 @@
 import { React, useContext } from "react";
 import { PaperAirplaneIcon as PaperAirplaneOutline } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon as PaperAirplaneSolid } from "@heroicons/react/24/solid";
-import UserMessage from "../UserMessage";
+import UserMessage from "../components/UserMessage";
 import { UserContext } from "../UserContext";
 
 const AnnouncementsSplit = ({
