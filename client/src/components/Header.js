@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import {
@@ -12,12 +12,32 @@ import {
   SunIcon,
   MoonIcon,
   ComputerDesktopIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
 const Header = ({ handleTheme }) => {
   const { userInfo, setUserInfo } = useContext(UserContext);
   const [popUpMenu, setPopUpMenu] = useState(false);
+  const [userMenu, setUserMenu] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "os");
+  const [schedules, setSchedules] = useState([]);
+
+  const fetchSchedules = useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:4000/schedule");
+      const data = await response.json();
+      const userCreatedSchedules = data.filter((schedule) => {
+        return schedule.author.username === userInfo.username;
+      });
+      setSchedules(userCreatedSchedules);
+    } catch (error) {
+      console.error("Failed to fetch schedules:", error);
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    fetchSchedules();
+  }, [fetchSchedules]);
 
   const handleThemeClick = () => {
     const nextTheme = handleTheme(theme);
@@ -45,7 +65,7 @@ const Header = ({ handleTheme }) => {
   function toggleMenu() {
     return (
       <div
-        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-lg z-10 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-sm z-10 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
         id="menu"
       >
         <Link
@@ -90,7 +110,7 @@ const Header = ({ handleTheme }) => {
   function toggleMenuLoggedIn() {
     return (
       <div
-        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-lg z-10 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+        className="absolute flex flex-col right-5 top-12 bg-gray-100 border-2 p-3 gap-y-2 rounded-sm z-10 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
         id="menu"
       >
         <Link
@@ -116,7 +136,7 @@ const Header = ({ handleTheme }) => {
         </Link>
         <button
           onClick={logout}
-          className="text-left hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center"
+          className="text-left hover:bg-gray-200 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
         >
           <ArrowRightStartOnRectangleIcon className="size-5" />
           Logout
@@ -129,6 +149,49 @@ const Header = ({ handleTheme }) => {
           {theme === "dark" && <MoonIcon />}
           {theme === "os" && <ComputerDesktopIcon />}
         </button>
+      </div>
+    );
+  }
+
+  function toggleUserMenu() {
+    return (
+      <div className="relative">
+        <div className="absolute font-normal right-0 top-10 w-max flex flex-col bg-gray-100 border-2 p-3 gap-y-2 rounded-sm z-10 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white">
+          <UserCircleIcon className="size-7 mx-auto" />
+          <p className="p-1 mx-auto">Logged in as: {userInfo.username}</p>
+          <div
+            onClick={handleThemeClick}
+            className="flex cursor-pointer hover:bg-gray-200 p-1 rounded-md justify-around dark:hover:bg-neutral-700"
+          >
+            <p>Display:</p>
+            <button className="size-6">
+              {theme === "light" && <SunIcon />}
+              {theme === "dark" && <MoonIcon />}
+              {theme === "os" && <ComputerDesktopIcon />}
+            </button>
+          </div>
+          <Link
+            to="/"
+            onClick={logout}
+            className="hover:bg-gray-200 p-1 flex justify-center rounded-md dark:hover:bg-neutral-700"
+          >
+            Logout
+          </Link>
+          <div className="relative my-2">
+            <hr />
+            <p className="text-sm font-bold absolute bg-gray-100 dark:bg-neutral-800 -top-[10px] left-2.5 cursor-default select-none">
+              Your Schedules
+            </p>
+          </div>
+          {schedules.map((schedule) => (
+            <Link
+              to={"/schedule/" + schedule.url}
+              className="text-sm cursor-pointer hover:bg-gray-200 p-1 rounded-md items-center dark:hover:bg-neutral-700"
+            >
+              {schedule.title}
+            </Link>
+          ))}
+        </div>
       </div>
     );
   }
@@ -146,18 +209,20 @@ const Header = ({ handleTheme }) => {
             <>
               <Link to="/schedules">Schedules</Link>
               <Link to="/create">Create a Schedule</Link>
-              <Link to="/" onClick={logout}>
-                Logout
-              </Link>
               <div className="border-l-2 border-gray-300"></div>
-              <button
-                onClick={handleThemeClick}
-                className="size-6 my-auto cursor-pointer"
-              >
-                {theme === "light" && <SunIcon />}
-                {theme === "dark" && <MoonIcon />}
-                {theme === "os" && <ComputerDesktopIcon />}
-              </button>
+              <div className="flex">
+                <button
+                  onClick={() => setUserMenu(!userMenu)}
+                  className="my-auto cursor-pointer"
+                >
+                  {userMenu ? (
+                    <XMarkIcon className="size-7 text-222 dark:text-white" />
+                  ) : (
+                    <UserCircleIcon className="size-7 text-222 dark:text-white" />
+                  )}
+                </button>
+                {userMenu && toggleUserMenu()}
+              </div>
             </>
           )}
           {!username && (
@@ -192,9 +257,9 @@ const Header = ({ handleTheme }) => {
             <>
               <button onClick={() => setPopUpMenu(!popUpMenu)}>
                 {popUpMenu ? (
-                  <XMarkIcon className="size-8 text-222 dark:text-white" />
+                  <XMarkIcon className="size-7 text-222 dark:text-white" />
                 ) : (
-                  <Bars3Icon className="size-8 text-222 dark:text-white" />
+                  <Bars3Icon className="size-7 text-222 dark:text-white" />
                 )}
               </button>
               {popUpMenu && toggleMenuLoggedIn()}
@@ -204,9 +269,9 @@ const Header = ({ handleTheme }) => {
             <>
               <button onClick={() => setPopUpMenu(!popUpMenu)}>
                 {popUpMenu ? (
-                  <XMarkIcon className="size-8 text-222 dark:text-white" />
+                  <XMarkIcon className="size-7 text-222 dark:text-white" />
                 ) : (
-                  <Bars3Icon className="size-8 text-222 dark:text-white" />
+                  <Bars3Icon className="size-7 text-222 dark:text-white" />
                 )}
               </button>
               {popUpMenu && toggleMenu()}
