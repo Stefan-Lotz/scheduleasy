@@ -12,6 +12,8 @@ const multer = require("multer");
 const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 const UserMessageModel = require("./models/UserMessage");
+const { Server } = require("socket.io");
+const http = require("http");
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -21,6 +23,23 @@ app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect(process.env.URI);
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
+});
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -144,6 +163,8 @@ app.post("/schedule/:url/message", async (req, res) => {
 
       schedule.messages.push(newMessage._id);
       await schedule.save();
+
+      io.emit("newMessage", { url, message: newMessage });
 
       res.json(newMessage);
     } catch (error) {
@@ -283,4 +304,6 @@ app.put("/schedule/:url/link", async (req, res) => {
   });
 });
 
-app.listen(4000);
+server.listen(4000, () => {
+  console.log("Server is running on port 4000");
+});

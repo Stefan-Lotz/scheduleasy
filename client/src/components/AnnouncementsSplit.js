@@ -1,19 +1,46 @@
-import { React, useContext } from "react";
+import { React, useContext, useEffect, useState, useRef } from "react";
 import { PaperAirplaneIcon as PaperAirplaneOutline } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon as PaperAirplaneSolid } from "@heroicons/react/24/solid";
 import UserMessage from "../components/UserMessage";
 import { UserContext } from "../UserContext";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:4000");
 
 const AnnouncementsSplit = ({
   scheduleInfo,
   handleMessageSubmit,
   newMessage,
   setNewMessage,
-  messageContainerRef,
   sendIsHovered,
   setSendIsHovered,
 }) => {
   const { userInfo } = useContext(UserContext);
+  const [messages, setMessages] = useState(scheduleInfo.messages || []);
+  const messageContainerRef = useRef(null);
+
+  useEffect(() => {
+    socket.on("newMessage", ({ url, message }) => {
+      if (scheduleInfo.url === url) {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      }
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [scheduleInfo.url]);
+
+  useEffect(() => {
+    setMessages(scheduleInfo.messages || []);
+  }, [scheduleInfo.messages]);
+
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
     <div className="relative h-full flex flex-col">
@@ -23,10 +50,9 @@ const AnnouncementsSplit = ({
       >
         <div className="flex flex-col h-full justify-between">
           <div className="grid px-2">
-            {scheduleInfo.messages &&
-              scheduleInfo.messages.map((message) => (
-                <UserMessage key={message._id} message={message} />
-              ))}
+            {messages.map((message) => (
+              <UserMessage key={message._id} message={message} />
+            ))}
           </div>
           {userInfo.id === scheduleInfo.author._id && (
             <form
