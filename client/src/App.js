@@ -25,7 +25,7 @@ function App() {
     } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       document.documentElement.classList.add("dark");
     }
-  }, []);
+  }, [theme]);
 
   const handleTheme = (currentTheme) => {
     let nextTheme;

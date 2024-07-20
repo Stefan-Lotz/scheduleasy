@@ -74,7 +74,7 @@ export default function EditSchedule() {
     return <Navigate to={`/schedule/${url}`} />;
   }
 
-  if (userInfo.id != owner) {
+  if (userInfo.id !== owner) {
     return (
       <div className="flex flex-col items-center text-222 dark:text-white">
         <ExclamationTriangleIcon className="h-12 w-12 animate-pulse" />
@@ -233,6 +233,7 @@ export default function EditSchedule() {
           <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
             PNG or JPG (Suggested size: 150 x 150px).
           </p>
+          <p className="hidden">Current cover: {cover}</p>
         </div>
         <button className="mx-auto rounded-2xl py-2 px-4 bg-mint text-white font-shrikhand text-xl">
           Update Schedule
