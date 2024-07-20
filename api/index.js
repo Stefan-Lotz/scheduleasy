@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(process.env.URI);
+mongoose.connect(process.env.MONGODB_URI);
 
 const server = http.createServer(app);
 const io = new Server(server, {
