@@ -18,7 +18,7 @@ export default function UserSchedule({
       <div className="schedule h-36 grid gap-3 bg-neutral-100 dark:bg-neutral-700 rounded-3xl border-solid border-4 border-neutral-200 dark:border-neutral-600 overflow-hidden hover:bg-neutral-200 hover:border-neutral-300 dark:hover:bg-neutral-600 dark:hover:border-neutral-500">
         <img
           className="object-center object-cover h-full max-w-32"
-          src={"http://localhost:4000/" + cover}
+          src={cover}
           alt=""
         />
         <div className="flex flex-col gap-0.5 truncate dark:text-neutral-200">

@@ -8,21 +8,43 @@ const bcrypt = require("bcryptjs");
 const app = express();
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const multer = require("multer");
-const uploadMiddleware = multer({ dest: "uploads/" });
 const fs = require("fs");
 const UserMessageModel = require("./models/UserMessage");
 const { Server } = require("socket.io");
 const http = require("http");
 
 const salt = bcrypt.genSaltSync(10);
+const bucket = "scheduleasy";
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(process.env.MONGODB_URI);
+async function uploadToS3(path, originalFilename, mimetype) {
+  const client = new S3Client({
+    region: "us-east-2",
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    },
+  });
+  const parts = originalFilename.split(".");
+  const ext = parts[parts.length - 1];
+  const newFilename = Date.now() + "." + ext;
+  const data = await client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Body: fs.readFileSync(path),
+      Key: newFilename,
+      ContentType: mimetype,
+      ACL: "public-read",
+    })
+  );
+  return `https://${bucket}.s3.amazonaws.com/${newFilename}`;
+}
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -42,6 +64,7 @@ io.on("connection", (socket) => {
 });
 
 app.post("/register", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   const { username, password } = req.body;
 
   try {
@@ -56,6 +79,7 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   const { username, password } = req.body;
   const userDoc = await User.findOne({ username });
   var passOk = "";
@@ -81,6 +105,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   const { token } = req.cookies;
   jwt.verify(token, process.env.SECRET, {}, (err, info) => {
     if (err) throw err;
@@ -92,13 +117,13 @@ app.post("/logout", (req, res) => {
   res.cookie("token", "").json("ok");
 });
 
+const uploadMiddleware = multer({ dest: "/tmp" });
+
 app.post("/schedule", uploadMiddleware.single("file"), async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   try {
-    const { originalname, path } = req.file;
-    const parts = originalname.split(".");
-    const ext = parts[parts.length - 1];
-    const newPath = path + "." + ext;
-    fs.renameSync(path, newPath);
+    const { originalname, path, mimetype } = req.file;
+    const coverUrl = await uploadToS3(path, originalname, mimetype);
 
     const { token } = req.cookies;
     jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
@@ -111,7 +136,7 @@ app.post("/schedule", uploadMiddleware.single("file"), async (req, res) => {
         title,
         about,
         numPeriods,
-        cover: newPath,
+        cover: coverUrl,
         url,
         author: info.id,
         periods: periodsArray,
@@ -126,6 +151,7 @@ app.post("/schedule", uploadMiddleware.single("file"), async (req, res) => {
 });
 
 app.get("/schedule", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   res.json(
     await ScheduleModel.find()
       .populate("author", ["username"])
@@ -134,6 +160,7 @@ app.get("/schedule", async (req, res) => {
 });
 
 app.get("/schedule/:url", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   const { url } = req.params;
   const scheduleDoc = await ScheduleModel.findOne({ url })
     .populate("author", ["username"])
@@ -142,6 +169,7 @@ app.get("/schedule/:url", async (req, res) => {
 });
 
 app.post("/schedule/:url/message", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   const { url } = req.params;
   const { text } = req.body;
   const { token } = req.cookies;
@@ -175,6 +203,7 @@ app.post("/schedule/:url/message", async (req, res) => {
 });
 
 app.put("/schedule/:url", uploadMiddleware.single("file"), async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   try {
     const { url } = req.params;
     const { title, about, numPeriods, periods } = req.body;
@@ -222,6 +251,7 @@ app.put("/schedule/:url", uploadMiddleware.single("file"), async (req, res) => {
 });
 
 app.get("/schedule/:url", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   try {
     const { url } = req.params;
     const schedule = await Schedule.findOne({ url });
@@ -236,6 +266,7 @@ app.get("/schedule/:url", async (req, res) => {
 });
 
 app.delete("/schedule/:url", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   try {
     const { url } = req.params;
     const { token } = req.cookies;
@@ -260,6 +291,7 @@ app.delete("/schedule/:url", async (req, res) => {
 });
 
 app.get("/user-schedules", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   const { token } = req.cookies;
 
   jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
@@ -276,6 +308,7 @@ app.get("/user-schedules", async (req, res) => {
 });
 
 app.put("/schedule/:url/link", async (req, res) => {
+  mongoose.connect(process.env.MONGODB_URI);
   const { url } = req.params;
   const { linkedSchedule } = req.body;
   const { token } = req.cookies;
