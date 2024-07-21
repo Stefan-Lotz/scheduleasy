@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd client && yarn install && yarn build",
-  "outputDirectory": "client/build",
-  "framework": "yarn",
+  "buildCommand": "cd client && yarn install && vite build",
+  "outputDirectory": "client/dist",
+  "framework": "vite",
   "rewrites": [
     {
       "source": "/api/(.*)",
