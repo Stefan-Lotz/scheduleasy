@@ -202,53 +202,57 @@ app.post("/api/schedule/:url/message", async (req, res) => {
   });
 });
 
-app.put("/api/schedule/:url", uploadMiddleware.single("file"), async (req, res) => {
-  mongoose.connect(process.env.MONGODB_URI);
-  try {
-    const { url } = req.params;
-    const { title, about, numPeriods, periods } = req.body;
-    const { token } = req.cookies;
-    let newPath;
+app.put(
+  "/api/schedule/:url",
+  uploadMiddleware.single("file"),
+  async (req, res) => {
+    mongoose.connect(process.env.MONGODB_URI);
+    try {
+      const { url } = req.params;
+      const { title, about, numPeriods, periods } = req.body;
+      const { token } = req.cookies;
+      let newPath;
 
-    jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
-      if (err) {
-        console.error("JWT Verification Error:", err);
-        return res.status(401).json("Unauthorized");
-      }
+      jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
+        if (err) {
+          console.error("JWT Verification Error:", err);
+          return res.status(401).json("Unauthorized");
+        }
 
-      if (req.file) {
-        const { originalname, path } = req.file;
-        const parts = originalname.split(".");
-        const ext = parts[parts.length - 1];
-        newPath = path + "." + ext;
-        fs.renameSync(path, newPath);
-      }
+        if (req.file) {
+          const { originalname, path } = req.file;
+          const parts = originalname.split(".");
+          const ext = parts[parts.length - 1];
+          newPath = path + "." + ext;
+          fs.renameSync(path, newPath);
+        }
 
-      const schedule = await ScheduleModel.findOne({ url });
-      if (!schedule) {
-        console.error("Schedule not found:", url);
-        return res.status(404).json("Schedule not found");
-      }
+        const schedule = await ScheduleModel.findOne({ url });
+        if (!schedule) {
+          console.error("Schedule not found:", url);
+          return res.status(404).json("Schedule not found");
+        }
 
-      if (schedule.author.toString() !== info.id) {
-        console.error("Forbidden: User is not the author of the schedule");
-        return res.status(403).json("Forbidden");
-      }
+        if (schedule.author.toString() !== info.id) {
+          console.error("Forbidden: User is not the author of the schedule");
+          return res.status(403).json("Forbidden");
+        }
 
-      schedule.title = title || schedule.title;
-      schedule.about = about || schedule.about;
-      schedule.numPeriods = numPeriods || schedule.numPeriods;
-      schedule.periods = periods ? JSON.parse(periods) : schedule.periods;
-      if (newPath) schedule.cover = newPath;
+        schedule.title = title || schedule.title;
+        schedule.about = about || schedule.about;
+        schedule.numPeriods = numPeriods || schedule.numPeriods;
+        schedule.periods = periods ? JSON.parse(periods) : schedule.periods;
+        if (newPath) schedule.cover = newPath;
 
-      await schedule.save();
-      res.json(schedule);
-    });
-  } catch (error) {
-    console.error("Internal Server Error:", error);
-    res.status(500).json("Internal server error");
+        await schedule.save();
+        res.json(schedule);
+      });
+    } catch (error) {
+      console.error("Internal Server Error:", error);
+      res.status(500).json("Internal server error");
+    }
   }
-});
+);
 
 app.get("/api/schedule/:url", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
@@ -272,7 +276,10 @@ app.delete("/api/schedule/:url", async (req, res) => {
     const { token } = req.cookies;
 
     jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
-      if (err) return res.status(401).json("Unauthorized");
+      if (err) {
+        console.error("JWT Error: ", err);
+        return res.status(401).json("Unauthorized");
+      }
 
       const schedule = await ScheduleModel.findOne({ url });
       if (!schedule) return res.status(404).json("Schedule not found");

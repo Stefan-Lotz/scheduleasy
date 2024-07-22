@@ -15,6 +15,7 @@ import EditSchedule from "./pages/EditSchedule";
 import axios from "axios";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+axios.defaults.withCredentials = true;
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "os");
