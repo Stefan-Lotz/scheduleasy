@@ -5,7 +5,7 @@ import UserMessage from "../components/UserMessage";
 import { UserContext } from "../UserContext";
 import io from "socket.io-client";
 
-const socket = io(process.env.VITE_API_BASE_URL);
+const socket = io(import.meta.env.VITE_API_BASE_URL);
 
 const AnnouncementsSplit = ({
   scheduleInfo,
