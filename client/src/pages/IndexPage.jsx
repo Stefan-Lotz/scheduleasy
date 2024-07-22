@@ -7,7 +7,7 @@ export default function IndexPage() {
       <Helmet>
         <title>Home | Scheduleasy</title>
       </Helmet>
-      <h1 className="font-syne font-extrabold text-mint dark:text-saffron text-center text-4xl mt-7 mb-1 mx-auto w-4/5">
+      <h1 className="font-syne font-bold sm:font-extrabold text-mint dark:text-saffron text-center text-4xl mt-7 mb-1 mx-auto w-4/5">
         Manage your class time efficiently with{" "}
         <span className="font-syne text-slate dark:text-pumpkin italic">
           Scheduleasy

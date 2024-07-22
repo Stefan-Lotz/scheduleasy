@@ -119,6 +119,7 @@ const Header = ({ handleTheme }) => {
         className="absolute flex flex-col right-5 top-12 bg-gray-200 border-gray-300 border-2 p-3 gap-y-2 rounded-sm z-10 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
         id="menu"
       >
+        <p className="font-semibold text-center">Hi there, {userInfo.username}!</p>
         <Link
           to="/"
           className="hover:bg-gray-300 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
@@ -140,6 +141,14 @@ const Header = ({ handleTheme }) => {
           <Squares2X2Icon className="size-5" />
           Schedules
         </Link>
+        
+        <button
+          onClick={logout}
+          className="text-left hover:bg-gray-300 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
+        >
+          <ArrowRightStartOnRectangleIcon className="size-5" />
+          Logout
+        </button>
         <button
           onClick={handleThemeClick}
           className="text-left hover:bg-gray-300 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700 cursor-pointer"
@@ -149,13 +158,20 @@ const Header = ({ handleTheme }) => {
           {theme === "os" && <ComputerDesktopIcon className="size-5" />}
           Theme
         </button>
-        <button
-          onClick={logout}
-          className="text-left hover:bg-gray-300 p-1 rounded-md flex gap-2 items-center dark:hover:bg-neutral-700"
-        >
-          <ArrowRightStartOnRectangleIcon className="size-5" />
-          Logout
-        </button>
+        <div className="relative my-2">
+            <hr />
+            <p className="text-sm px-0.5 font-bold absolute bg-gray-100 dark:bg-neutral-800 -top-[10px] left-2.5 cursor-default select-none">
+              Your Schedules
+            </p>
+          </div>
+          {schedules.map((schedule) => (
+            <Link
+              to={"/schedule/" + schedule.url}
+              className="text-sm cursor-pointer hover:bg-gray-300 p-1 rounded-md items-center dark:hover:bg-neutral-700"
+            >
+              {schedule.title}
+            </Link>
+          ))}
       </div>
     );
   }

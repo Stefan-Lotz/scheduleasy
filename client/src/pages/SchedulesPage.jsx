@@ -58,7 +58,7 @@ export default function IndexPage() {
           Browse the list of user-created schedules!
         </p>
 
-        <div className="relative w-1/2 max-w-screen-sm mx-auto text-gray-400 dark:text-gray-200 focus-within:text-222 dark:focus-within:text-gray-200">
+        <div className="relative w-5/6 sm:w-3/5 max-w-screen-sm mx-auto text-gray-400 dark:text-gray-200 focus-within:text-222 dark:focus-within:text-gray-200">
           <MagnifyingGlassIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 size-5 pointer-events-none" />
           <input
             type="text"
