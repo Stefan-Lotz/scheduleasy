@@ -63,7 +63,7 @@ io.on("connection", (socket) => {
   });
 });
 
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { username, password } = req.body;
 
@@ -78,7 +78,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { username, password } = req.body;
   const userDoc = await User.findOne({ username });
@@ -104,7 +104,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/api/profile", (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { token } = req.cookies;
   jwt.verify(token, process.env.SECRET, {}, (err, info) => {
@@ -113,13 +113,13 @@ app.get("/profile", (req, res) => {
   });
 });
 
-app.post("/logout", (req, res) => {
+app.post("/api/logout", (req, res) => {
   res.cookie("token", "").json("ok");
 });
 
 const uploadMiddleware = multer({ dest: "/tmp" });
 
-app.post("/schedule", uploadMiddleware.single("file"), async (req, res) => {
+app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   try {
     const { originalname, path, mimetype } = req.file;
@@ -150,7 +150,7 @@ app.post("/schedule", uploadMiddleware.single("file"), async (req, res) => {
   }
 });
 
-app.get("/schedule", async (req, res) => {
+app.get("/api/schedule", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   res.json(
     await ScheduleModel.find()
@@ -159,7 +159,7 @@ app.get("/schedule", async (req, res) => {
   );
 });
 
-app.get("/schedule/:url", async (req, res) => {
+app.get("/api/schedule/:url", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { url } = req.params;
   const scheduleDoc = await ScheduleModel.findOne({ url })
@@ -168,7 +168,7 @@ app.get("/schedule/:url", async (req, res) => {
   res.json(scheduleDoc);
 });
 
-app.post("/schedule/:url/message", async (req, res) => {
+app.post("/api/schedule/:url/message", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { url } = req.params;
   const { text } = req.body;
@@ -202,7 +202,7 @@ app.post("/schedule/:url/message", async (req, res) => {
   });
 });
 
-app.put("/schedule/:url", uploadMiddleware.single("file"), async (req, res) => {
+app.put("/api/schedule/:url", uploadMiddleware.single("file"), async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   try {
     const { url } = req.params;
@@ -250,7 +250,7 @@ app.put("/schedule/:url", uploadMiddleware.single("file"), async (req, res) => {
   }
 });
 
-app.get("/schedule/:url", async (req, res) => {
+app.get("/api/schedule/:url", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   try {
     const { url } = req.params;
@@ -265,7 +265,7 @@ app.get("/schedule/:url", async (req, res) => {
   }
 });
 
-app.delete("/schedule/:url", async (req, res) => {
+app.delete("/api/schedule/:url", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   try {
     const { url } = req.params;
@@ -290,7 +290,7 @@ app.delete("/schedule/:url", async (req, res) => {
   }
 });
 
-app.get("/user-schedules", async (req, res) => {
+app.get("/api/user-schedules", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { token } = req.cookies;
 
@@ -307,7 +307,7 @@ app.get("/user-schedules", async (req, res) => {
   });
 });
 
-app.put("/schedule/:url/link", async (req, res) => {
+app.put("/api/schedule/:url/link", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { url } = req.params;
   const { linkedSchedule } = req.body;
