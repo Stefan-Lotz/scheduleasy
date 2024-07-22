@@ -5,6 +5,7 @@ import confetti from "canvas-confetti";
 import Header from "../components/Header";
 import DesktopSchedulePage from "./DesktopSchedulePage";
 import MobileSchedulePage from "./MobileSchedulePage";
+import axios from "axios";
 
 const SchedulePage = ({ handleTheme }) => {
   const [scheduleInfo, setScheduleInfo] = useState(null);
@@ -23,21 +24,21 @@ const SchedulePage = ({ handleTheme }) => {
   const handleMessageSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`http://localhost:4000/schedule/${url}/message`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ text: newMessage }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to send message");
+    axios
+      .post(
+        `/schedule/${url}/message`,
+        {
+          text: newMessage,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
         }
-        return response.json();
-      })
-      .then((newMsg) => {
+      )
+      .then((response) => {
+        const newMsg = response.data;
         setScheduleInfo((prevState) => ({
           ...prevState,
           messages: [...prevState.messages, newMsg],
@@ -72,7 +73,9 @@ const SchedulePage = ({ handleTheme }) => {
       let timeLeft = 0;
 
       for (const period of scheduleInfo.periods) {
-        const [startHour, startMinute] = period.startTime.split(":").map(Number);
+        const [startHour, startMinute] = period.startTime
+          .split(":")
+          .map(Number);
         const [endHour, endMinute] = period.endTime.split(":").map(Number);
 
         const startSeconds = startHour * 3600 + startMinute * 60;
@@ -158,17 +161,12 @@ const SchedulePage = ({ handleTheme }) => {
   }
 
   useEffect(() => {
-    fetch(`http://localhost:4000/schedule/${url}`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
+    axios
+      .get(`/schedule/${url}`, {
+        withCredentials: true,
       })
-      .then((scheduleInfo) => {
+      .then((response) => {
+        const scheduleInfo = response.data;
         if (!scheduleInfo) {
           navigate("/not-found");
           return;

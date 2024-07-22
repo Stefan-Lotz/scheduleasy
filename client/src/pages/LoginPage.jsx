@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Helmet } from "react-helmet";
+import axios from "axios";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -19,20 +20,28 @@ export default function LoginPage() {
 
   async function login(ev) {
     ev.preventDefault();
-    const response = await fetch("http://localhost:4000/login", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-    if (response.ok && username !== "" && password !== "") {
-      response.json().then((userInfo) => {
+
+    try {
+      const response = await axios.post(
+        "/login",
+        { username, password },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200 && username !== "" && password !== "") {
+        const userInfo = response.data;
         setUserInfo(userInfo);
         setRedirect(true);
-      });
-    } else if (username === "" || password === "") {
-      setError("All fields must have a value!");
-    } else {
+      } else if (username === "" || password === "") {
+        setError("All fields must have a value!");
+      } else {
+        setError("Invalid credentials!");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
       setError("Invalid credentials!");
     }
   }

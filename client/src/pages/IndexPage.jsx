@@ -54,14 +54,14 @@ export default function IndexPage() {
             fill="black"
           />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M192 8.75C192 7.36929 193.119 6.25 194.5 6.25C195.881 6.25 197 7.36929 197 8.75V11.25H195.75V8.75C195.75 8.05964 195.19 7.5 194.5 7.5C193.81 7.5 193.25 8.05964 193.25 8.75V11.25H192V8.75Z"
             fill="#A6A6A6"
           />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M192 10.625C190.619 10.625 189.5 11.7443 189.5 13.125V16.25C189.5 17.6307 190.619 18.75 192 18.75H197C198.381 18.75 199.5 17.6307 199.5 16.25V13.125C199.5 11.7443 198.381 10.625 197 10.625H192Z"
             fill="#A6A6A6"
           />
@@ -183,14 +183,14 @@ export default function IndexPage() {
             fill="black"
           />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M192 8.75C192 7.36929 193.119 6.25 194.5 6.25C195.881 6.25 197 7.36929 197 8.75V11.25H195.75V8.75C195.75 8.05964 195.19 7.5 194.5 7.5C193.81 7.5 193.25 8.05964 193.25 8.75V11.25H192V8.75Z"
             fill="#A6A6A6"
           />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M192 10.625C190.619 10.625 189.5 11.7443 189.5 13.125V16.25C189.5 17.6307 190.619 18.75 192 18.75H197C198.381 18.75 199.5 17.6307 199.5 16.25V13.125C199.5 11.7443 198.381 10.625 197 10.625H192Z"
             fill="#A6A6A6"
           />
@@ -281,14 +281,14 @@ export default function IndexPage() {
             fill="black"
           />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M192 8.75C192 7.36929 193.119 6.25 194.5 6.25C195.881 6.25 197 7.36929 197 8.75V11.25H195.75V8.75C195.75 8.05964 195.19 7.5 194.5 7.5C193.81 7.5 193.25 8.05964 193.25 8.75V11.25H192V8.75Z"
             fill="#A6A6A6"
           />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M192 10.625C190.619 10.625 189.5 11.7443 189.5 13.125V16.25C189.5 17.6307 190.619 18.75 192 18.75H197C198.381 18.75 199.5 17.6307 199.5 16.25V13.125C199.5 11.7443 198.381 10.625 197 10.625H192Z"
             fill="#A6A6A6"
           />

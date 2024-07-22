@@ -14,6 +14,7 @@ import {
   ComputerDesktopIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import axios from "axios";
 
 const Header = ({ handleTheme }) => {
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -24,8 +25,8 @@ const Header = ({ handleTheme }) => {
 
   const fetchSchedules = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:4000/schedule");
-      const data = await response.json();
+      const response = await axios.get("/schedule");
+      const data = response.data;
       const userCreatedSchedules = data.filter((schedule) => {
         return schedule.author.username === userInfo.username;
       });
@@ -45,21 +46,25 @@ const Header = ({ handleTheme }) => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:4000/profile", {
-      credentials: "include",
-    }).then((response) => {
-      response.json().then((userInfo) => {
-        setUserInfo(userInfo);
+    axios
+      .get("/profile", { withCredentials: true })
+      .then((response) => {
+        setUserInfo(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile:", error);
       });
-    });
   }, [setUserInfo]);
 
   function logout() {
-    fetch("http://localhost:4000/logout", {
-      credentials: "include",
-      method: "POST",
-    });
-    setUserInfo(null);
+    axios
+      .post("/logout", {}, { withCredentials: true })
+      .then(() => {
+        setUserInfo(null);
+      })
+      .catch((error) => {
+        console.error("Error logging out:", error);
+      });
   }
 
   function toggleMenu() {

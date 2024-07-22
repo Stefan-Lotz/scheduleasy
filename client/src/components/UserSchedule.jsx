@@ -10,6 +10,11 @@ export default function UserSchedule({
   author,
   url,
 }) {
+  const updatedAtTimestamp =
+    typeof updatedAt === "string" || updatedAt instanceof Date
+      ? new Date(updatedAt).getTime()
+      : updatedAt;
+
   return (
     <Link
       to={"/schedule/" + url}
@@ -27,7 +32,8 @@ export default function UserSchedule({
           <p>Created By: {author.username}</p>
           <p>Periods: {numPeriods}</p>
           <p>
-            Last updated: <ReactTimeAgo date={updatedAt} locale="en-US" />
+            Last updated:{" "}
+            <ReactTimeAgo date={updatedAtTimestamp} locale="en-US" />
           </p>
         </div>
       </div>

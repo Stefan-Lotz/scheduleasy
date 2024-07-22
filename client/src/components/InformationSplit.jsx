@@ -9,6 +9,7 @@ import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import LinkScheduleModal from "../components/LinkScheduleModal";
+import axios from "axios";
 
 const InformationSplit = ({ scheduleInfo, userInfo }) => {
   const [editIsHovered, setEditIsHovered] = useState(false);
@@ -22,10 +23,10 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
   useEffect(() => {
     async function fetchUserSchedules() {
       try {
-        const response = await fetch("http://localhost:4000/user-schedules", {
-          credentials: "include",
+        const response = await axios.get("/user-schedules", {
+          withCredentials: true,
         });
-        const schedules = await response.json();
+        const schedules = response.data;
         const filteredSchedules = schedules.filter(
           (schedule) => schedule.url !== scheduleInfo.url
         );
@@ -39,12 +40,12 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
             setSelectedSchedule(linked);
             setLinkedScheduleTitle(linked.title);
           } else {
-            const linkedResponse = await fetch(
-              `http://localhost:4000/schedule/${scheduleInfo.linkedSchedule}`,
-              { credentials: "include" }
+            const linkedResponse = await axios.get(
+              `/${scheduleInfo.linkedSchedule}`,
+              { withCredentials: true }
             );
-            if (linkedResponse.ok) {
-              const linkedSchedule = await linkedResponse.json();
+            if (linkedResponse.status === 200) {
+              const linkedSchedule = linkedResponse.data;
               setLinkedScheduleTitle(linkedSchedule.title);
             }
           }
@@ -67,14 +68,10 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
 
   async function confirmDelete() {
     try {
-      const response = await fetch(
-        `http://localhost:4000/schedule/${scheduleInfo.url}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
-      if (response.ok) {
+      const response = await axios.delete(`/schedule/${scheduleInfo.url}`, {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
         window.location.href = "/schedules";
       } else {
         console.error("Failed to delete schedule");
@@ -88,19 +85,18 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
     if (!selectedSchedule) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:4000/schedule/${scheduleInfo.url}/link`,
+      const response = await axios.put(
+        `/schedule/${scheduleInfo.url}/link`,
+        { linkedSchedule: selectedSchedule.url },
         {
-          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
-          body: JSON.stringify({ linkedSchedule: selectedSchedule.url }),
+          withCredentials: true,
         }
       );
 
-      if (response.ok) {
+      if (response.status === 200) {
         setIsLinkModalOpen(false);
         window.location.reload();
       } else {
@@ -113,28 +109,32 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
 
   async function confirmUnlink() {
     try {
-      const response = await fetch(
-        `http://localhost:4000/schedule/${scheduleInfo.url}/link`,
+      const response = await axios.put(
+        `/schedule/${scheduleInfo.url}/link`,
+        { linkedSchedule: null },
         {
-          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
-          body: JSON.stringify({ linkedSchedule: null }),
+          withCredentials: true,
         }
       );
-
-      if (response.ok) {
+  
+      if (response.status === 200) {
         setIsLinkModalOpen(false);
         window.location.reload();
       } else {
-        console.error("Failed to link schedule");
+        console.error("Failed to unlink schedule");
       }
     } catch (error) {
-      console.error("Error linking schedule:", error);
+      console.error("Error unlinking schedule:", error);
     }
   }
+
+  const updatedAtTimestamp = 
+  typeof scheduleInfo.updatedAt === 'string' || scheduleInfo.updatedAt instanceof Date
+  ? new Date(scheduleInfo.updatedAt).getTime()
+  : scheduleInfo.updatedAt;
 
   return (
     <div>
@@ -161,7 +161,7 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
         <p>{scheduleInfo.about}</p>
         <p>
           Last updated:{" "}
-          <ReactTimeAgo date={scheduleInfo.updatedAt} locale="en-US" />
+          <ReactTimeAgo date={updatedAtTimestamp} locale="en-US" />
         </p>
         {scheduleInfo.linkedSchedule && (
           <Link

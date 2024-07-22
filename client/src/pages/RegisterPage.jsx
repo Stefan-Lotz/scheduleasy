@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Helmet } from "react-helmet";
+import axios from "axios";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -12,18 +13,29 @@ export default function RegisterPage() {
 
   async function register(ev) {
     ev.preventDefault();
-    const response = await fetch("http://localhost:4000/register", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: { "Content-Type": "application/json" },
-    });
-    if (response.status === 200 && password !== "") {
-      setRedirect(true);
-    } else if (username === "") {
-      setError("Enter a username.");
-    } else if (password === "") {
-      setError("Enter a password.");
-    } else {
+
+    try {
+      const response = await axios.post(
+        "/register",
+        { username, password },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (response.status === 200 && password !== "") {
+        setRedirect(true);
+      } else if (username === "") {
+        setError("Enter a username.");
+      } else if (password === "") {
+        setError("Enter a password.");
+      } else {
+        setError(
+          "Unable to register. That username may already be taken. Please try again."
+        );
+      }
+    } catch (error) {
+      console.error("Registration failed:", error);
       setError(
         "Unable to register. That username may already be taken. Please try again."
       );

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Navigate } from "react-router-dom";
+import axios from "axios";
 
 export default function CreatePage() {
   const [title, setTitle] = useState("");
@@ -37,13 +38,17 @@ export default function CreatePage() {
     data.set("url", url);
     data.set("periods", JSON.stringify(periods));
 
-    const response = await fetch("http://localhost:4000/schedule", {
-      method: "POST",
-      body: data,
-      credentials: "include",
-    });
-    if (response.ok) {
-      setRedirect(true);
+    try {
+      const response = await axios.post(
+        "/schedule",
+        data,
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        setRedirect(true);
+      }
+    } catch (error) {
+      console.error("Error creating new schedule:", error);
     }
   }
 

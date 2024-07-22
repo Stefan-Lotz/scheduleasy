@@ -6,6 +6,7 @@ import {
   ExclamationTriangleIcon,
   ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
+import axios from "axios";
 
 export default function EditSchedule() {
   const { url } = useParams();
@@ -20,9 +21,12 @@ export default function EditSchedule() {
   const { userInfo } = useContext(UserContext);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/schedule/${url}`)
-      .then((response) => response.json())
-      .then((data) => {
+    axios
+      .get(`/schedule/${url}`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        const data = response.data;
         setTitle(data.title);
         setAbout(data.about);
         setNumPeriods(data.numPeriods);
@@ -60,13 +64,19 @@ export default function EditSchedule() {
     data.set("numPeriods", numPeriods);
     data.set("periods", JSON.stringify(periods));
 
-    const response = await fetch(`http://localhost:4000/schedule/${url}`, {
-      method: "PUT",
-      body: data,
-      credentials: "include",
-    });
-    if (response.ok) {
-      setRedirect(true);
+    try {
+      const response = await axios.put(
+        `/schedule/${url}`,
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        setRedirect(true);
+      }
+    } catch (error) {
+      console.error("Error updating schedule:", error);
     }
   }
 

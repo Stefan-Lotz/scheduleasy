@@ -18,7 +18,7 @@ const http = require("http");
 const salt = bcrypt.genSaltSync(10);
 const bucket = "scheduleasy";
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -49,7 +49,7 @@ async function uploadToS3(path, originalFilename, mimetype) {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
     credentials: true,
   },

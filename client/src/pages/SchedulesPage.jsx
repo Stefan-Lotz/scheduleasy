@@ -6,6 +6,7 @@ import {
   ExclamationTriangleIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import axios from "axios";
 
 export default function IndexPage() {
   const [schedules, setSchedules] = useState([]);
@@ -14,8 +15,8 @@ export default function IndexPage() {
 
   const fetchSchedules = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:4000/schedule");
-      const data = await response.json();
+      const response = await axios.get("/schedule");
+      const data = response.data;
       setSchedules(data);
       setFilteredSchedules(data);
     } catch (error) {
