@@ -26,7 +26,7 @@ export default function UserSchedule({
           src={cover}
           alt=""
         />
-        <div className="flex flex-col gap-0.5 truncate dark:text-neutral-200">
+        <div className="flex flex-col justify-center gap-0.5 truncate dark:text-neutral-200">
           <h2 className="text-xl font-semibold">{title}</h2>
           <p className="truncate">{about}</p>
           <p>Created By: {author.username}</p>

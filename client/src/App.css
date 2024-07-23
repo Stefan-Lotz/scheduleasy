@@ -52,16 +52,6 @@ div.schedule {
   grid-template-columns: 0.5fr 2fr;
 }
 
-div.error {
-  background-color: #f06d6d;
-  padding: 5px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  text-align: center;
-  border: 2px solid #e94747;
-  color: #fff;
-}
-
 .gutter {
   background-color: #e5e5e5;
   background-repeat: no-repeat;

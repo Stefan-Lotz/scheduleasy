@@ -245,7 +245,7 @@ export default function EditSchedule() {
           </p>
           <p className="hidden">Current cover: {cover}</p>
         </div>
-        <button className="mx-auto rounded-2xl py-2 px-4 bg-mint text-white font-shrikhand text-xl">
+        <button className="mx-auto rounded-2xl py-2 px-4 bg-mint hover:bg-[#1f756a] text-white font-shrikhand text-xl">
           Update Schedule
         </button>
       </form>

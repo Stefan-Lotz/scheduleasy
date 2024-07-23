@@ -76,7 +76,11 @@ export default function LoginPage() {
         <div className="my-10 text-center">
           <h1 className="font-syne font-bold text-4xl text-slate">Log In</h1>
           <form className="max-w-sm mx-auto py-5 p-4 md:p-0" onSubmit={login}>
-            {error && <div className="error mt-2">{error}</div>}
+            {error && (
+              <div className="bg-salmon p-1 mb-5 rounded-md text-center font-syne border-2 border-amber-700 text-white mt-2">
+                {error}
+              </div>
+            )}
             <div className="relative">
               <input
                 type="text"

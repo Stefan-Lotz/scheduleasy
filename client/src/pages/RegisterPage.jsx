@@ -58,11 +58,6 @@ export default function RegisterPage() {
         <title>Register | Scheduleasy</title>
       </Helmet>
       <div className="flex flex-col vh bg-white md:bg-transparent md:mx-5 place-content-center md:w-1/2">
-        {error && (
-          <div className="w-5/6 bg-red-400 mx-auto text-center text-white text-lg py-2 rounded-lg mb-5 border-2 border-solid border-red-500">
-            {error}
-          </div>
-        )}
         <Link
           to="/"
           className="text-4xl md:text-5xl text-center font-shrikhand text-slate mx-auto"
@@ -75,6 +70,11 @@ export default function RegisterPage() {
             className="max-w-sm mx-auto py-5 p-4 md:p-0"
             onSubmit={register}
           >
+            {error && (
+              <div className="bg-salmon mx-auto rounded-md text-center font-syne border-2 border-amber-700 text-white mt-2 text-wrap">
+                {error}
+              </div>
+            )}
             <div className="relative">
               <input
                 type="text"
