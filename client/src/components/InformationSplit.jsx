@@ -22,20 +22,35 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
 
   useEffect(() => {
     async function fetchUserSchedules() {
+      if (userInfo) {
+        try {
+          const response = await axios.get("/user-schedules", {
+            withCredentials: true,
+          });
+          const schedules = response.data;
+          const filteredSchedules = schedules.filter(
+            (schedule) => schedule.url !== scheduleInfo.url
+          );
+          setUserSchedules(filteredSchedules);
+        } catch (error) {
+          console.error("Failed to fetch user schedules:", error);
+        }
+      }
+    }
+
+    async function fetchLinkedSchedule() {
       try {
-        const response = await axios.get("/user-schedules", {
+        const allSchedulesResponse = await axios.get("/schedule", {
           withCredentials: true,
         });
-        const schedules = response.data;
-        const filteredSchedules = schedules.filter(
-          (schedule) => schedule.url !== scheduleInfo.url
-        );
-        setUserSchedules(filteredSchedules);
 
-        if (scheduleInfo.linkedSchedule) {
-          const linked = filteredSchedules.find(
+        if (allSchedulesResponse.status === 200) {
+          const allSchedules = allSchedulesResponse.data;
+
+          const linked = allSchedules.find(
             (schedule) => schedule.url === scheduleInfo.linkedSchedule
           );
+
           if (linked) {
             setSelectedSchedule(linked);
             setLinkedScheduleTitle(linked.title);
@@ -44,6 +59,7 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
               `/${scheduleInfo.linkedSchedule}`,
               { withCredentials: true }
             );
+
             if (linkedResponse.status === 200) {
               const linkedSchedule = linkedResponse.data;
               setLinkedScheduleTitle(linkedSchedule.title);
@@ -51,12 +67,13 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
           }
         }
       } catch (error) {
-        console.error("Failed to fetch user schedules:", error);
+        console.error("Error fetching schedules:", error);
       }
     }
 
     fetchUserSchedules();
-  }, [scheduleInfo.linkedSchedule, scheduleInfo.url]);
+    fetchLinkedSchedule();
+  }, [scheduleInfo.linkedSchedule, scheduleInfo.url, userInfo]);
 
   function deleteSchedule() {
     setIsDeleteModalOpen(true);
@@ -119,7 +136,7 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
           withCredentials: true,
         }
       );
-  
+
       if (response.status === 200) {
         setIsLinkModalOpen(false);
         window.location.reload();
@@ -131,10 +148,11 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
     }
   }
 
-  const updatedAtTimestamp = 
-  typeof scheduleInfo.updatedAt === 'string' || scheduleInfo.updatedAt instanceof Date
-  ? new Date(scheduleInfo.updatedAt).getTime()
-  : scheduleInfo.updatedAt;
+  const updatedAtTimestamp =
+    typeof scheduleInfo.updatedAt === "string" ||
+    scheduleInfo.updatedAt instanceof Date
+      ? new Date(scheduleInfo.updatedAt).getTime()
+      : scheduleInfo.updatedAt;
 
   return (
     <div>
@@ -166,7 +184,7 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
         {scheduleInfo.linkedSchedule && (
           <Link
             to={"/schedule/" + scheduleInfo.linkedSchedule}
-            className="border border-222 dark:border-white rounded-md py-2 px-5 mx-auto flex items-center gap-3 hover:text-mint hover:border-mint"
+            className="border border-222 dark:border-white rounded-md py-1 px-3 mx-auto flex items-center gap-3 hover:text-mint hover:border-mint"
           >
             {linkedScheduleTitle}
             <ArrowRightIcon className="size-5" />

@@ -113,35 +113,19 @@ export default function IndexPage() {
         </div>
       </div>
       <div className="flex justify-center">
-        {document.documentElement.classList.contains("dark") ? (
-          <svg
-            className="bg-222"
-            width="110%"
-            height="70"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-          >
-            <path
-              id="wavepath"
-              d="M0,0  L110,0C35,150 35,0 0,100z"
-              fill="#2A9D8F"
-            ></path>
-          </svg>
-        ) : (
-          <svg
-            className="bg-white dark:bg-222"
-            width="110%"
-            height="70"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-          >
-            <path
-              id="wavepath"
-              d="M0,0  L110,0C35,150 35,0 0,100z"
-              fill="#2A9D8F"
-            ></path>
-          </svg>
-        )}
+        <svg
+          className="bg-white dark:bg-222"
+          width="110%"
+          height="70"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            id="wavepath"
+            d="M0,0  L110,0C35,150 35,0 0,100z"
+            fill="#2A9D8F"
+          ></path>
+        </svg>
       </div>
     </>
   );

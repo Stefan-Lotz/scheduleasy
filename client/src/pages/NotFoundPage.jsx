@@ -16,14 +16,14 @@ export default function NotFoundPage() {
       <Helmet>
         <title>404 | Scheduleasy</title>
       </Helmet>
-      <div className="flex flex-col w-1/2 vh mx-5 place-content-center">
+      <div className="flex flex-col md:w-1/2 md:bg-transparent vh mx-5 place-content-center bg-white w-full">
         <Link
           to="/"
-          className="text-5xl text-center font-shrikhand text-slate "
+          className="text-5xl mx-auto font-shrikhand text-slate "
         >
           Scheduleasy
         </Link>
-        <div className="m-10 text-center">
+        <div className="m-10 mt-0 text-center">
           <h1 className="my-10 font-syne font-bold text-3xl text-222">
             {isSchedulePath
               ? "Sorry, the schedule you are looking for does not exist."

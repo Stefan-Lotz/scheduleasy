@@ -107,8 +107,13 @@ app.post("/api/login", async (req, res) => {
 app.get("/api/profile", (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).json("Token not provided");
+  }
+
   jwt.verify(token, process.env.SECRET, {}, (err, info) => {
-    if (err) throw err;
+    if (err) return res.status(401).json("Invalid token");
     res.json(info);
   });
 });
@@ -124,26 +129,20 @@ app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
   try {
     const { originalname, path, mimetype } = req.file;
     const coverUrl = await uploadToS3(path, originalname, mimetype);
+    const { title, about, numPeriods, url, periods } = req.body;
+    const periodsArray = JSON.parse(periods);
 
-    const { token } = req.cookies;
-    jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
-      if (err) throw err;
-
-      const { title, about, numPeriods, url, periods } = req.body;
-      const periodsArray = JSON.parse(periods);
-
-      const scheduleDoc = await ScheduleModel.create({
-        title,
-        about,
-        numPeriods,
-        cover: coverUrl,
-        url,
-        author: info.id,
-        periods: periodsArray,
-      });
-
-      res.json(scheduleDoc);
+    const scheduleDoc = await ScheduleModel.create({
+      title,
+      about,
+      numPeriods,
+      cover: coverUrl,
+      url,
+      author: info.id,
+      periods: periodsArray,
     });
+
+    res.json(scheduleDoc);
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: "Failed to create schedule" });
@@ -173,6 +172,8 @@ app.post("/api/schedule/:url/message", async (req, res) => {
   const { url } = req.params;
   const { text } = req.body;
   const { token } = req.cookies;
+
+  if (!token) return res.status(401).json("Token not provided");
 
   jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
     if (err) return res.status(401).json("Invalid token");

@@ -76,13 +76,13 @@ const DesktopSchedulePage = ({
         </div>
         <div>
           <div className="flex justify-center">
-            <InformationCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
+            <EllipsisHorizontalCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
           </div>
           <BellScheduleSplit scheduleInfo={scheduleInfo} />
         </div>
         <div>
           <div className="flex justify-center">
-            <EllipsisHorizontalCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
+            <InformationCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
           </div>
           <InformationSplit scheduleInfo={scheduleInfo} userInfo={userInfo} />
         </div>
