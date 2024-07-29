@@ -126,27 +126,37 @@ const uploadMiddleware = multer({ dest: "/tmp" });
 
 app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
-  try {
-    const { originalname, path, mimetype } = req.file;
-    const coverUrl = await uploadToS3(path, originalname, mimetype);
-    const { title, about, numPeriods, url, periods } = req.body;
-    const periodsArray = JSON.parse(periods);
 
-    const scheduleDoc = await ScheduleModel.create({
-      title,
-      about,
-      numPeriods,
-      cover: coverUrl,
-      url,
-      author: info.id,
-      periods: periodsArray,
-    });
+  const { token } = req.cookies;
 
-    res.json(scheduleDoc);
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: "Failed to create schedule" });
-  }
+  jwt.verify(token, process.env.SECRET, async (err, info) => {
+    if (err) {
+      console.error("JWT Error: ", err);
+      return res.status(401).json("Unauthorized");
+    }
+
+    try {
+      const { originalname, path, mimetype } = req.file;
+      const coverUrl = await uploadToS3(path, originalname, mimetype);
+      const { title, about, numPeriods, url, periods } = req.body;
+      const periodsArray = JSON.parse(periods);
+
+      const scheduleDoc = await ScheduleModel.create({
+        title,
+        about,
+        numPeriods,
+        cover: coverUrl,
+        url,
+        author: info.id,
+        periods: periodsArray,
+      });
+
+      res.json(scheduleDoc);
+    } catch (error) {
+      console.error("Error creating schedule: ", error);
+      res.status(400).json({ error: "Failed to create schedule" });
+    }
+  });
 });
 
 app.get("/api/schedule", async (req, res) => {
@@ -282,15 +292,38 @@ app.delete("/api/schedule/:url", async (req, res) => {
         return res.status(401).json("Unauthorized");
       }
 
-      const schedule = await ScheduleModel.findOne({ url });
-      if (!schedule) return res.status(404).json("Schedule not found");
+      const session = await mongoose.startSession();
+      session.startTransaction();
 
-      if (schedule.author.toString() !== info.id) {
-        return res.status(403).json("Forbidden");
+      try {
+        const schedule = await ScheduleModel.findOne({ url }).session(session);
+        if (!schedule) {
+          await session.abortTransaction();
+          return res.status(404).json("Schedule not found");
+        }
+
+        if (schedule.author.toString() !== info.id) {
+          await session.abortTransaction();
+          return res.status(403).json("Forbidden");
+        }
+
+        await ScheduleModel.deleteOne({ _id: schedule._id }).session(session);
+
+        await ScheduleModel.updateMany(
+          { linkedSchedule: url },
+          { $unset: { linkedSchedule: 1 } },
+          { session }
+        );
+
+        await session.commitTransaction();
+        session.endSession();
+        res.json({ message: "Schedule deleted and linked schedules updated" });
+      } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        console.error("Error deleting schedule:", error);
+        res.status(500).json("Internal server error");
       }
-
-      await ScheduleModel.deleteOne({ _id: schedule._id });
-      res.json({ message: "Schedule deleted" });
     });
   } catch (error) {
     console.error("Error deleting schedule:", error);
