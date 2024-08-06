@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User");
 const ScheduleModel = require("./models/Schedule");
+const MessageModel = require("./models/UserMessage");
 const bcrypt = require("bcryptjs");
 const app = express();
 const jwt = require("jsonwebtoken");
@@ -315,9 +316,14 @@ app.delete("/api/schedule/:url", async (req, res) => {
           { session }
         );
 
+        await MessageModel.deleteMany({ schedule: schedule._id }, { session });
+
         await session.commitTransaction();
         session.endSession();
-        res.json({ message: "Schedule deleted and linked schedules updated" });
+        res.json({
+          message:
+            "Schedule deleted and linked schedules updated, messages deleted",
+        });
       } catch (error) {
         await session.abortTransaction();
         session.endSession();

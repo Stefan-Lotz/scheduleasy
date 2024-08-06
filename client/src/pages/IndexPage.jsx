@@ -26,7 +26,7 @@ export default function IndexPage() {
         </svg>
       </div>
       <div className="bg-saffron text-center md:text-left flex justify-center md:items-center md:gap-10 px-6">
-        <img src="../img/create.svg" className="w-1/2"></img>
+        <img src="../img/create.svg" className="w-1/2 hidden md:block"></img>
         <div className="flex flex-col">
           <h1 className="max-w-lg font-syne font-bold wonk soft text-3xl mt-3 md:mt-0">
             ✦ Easily create and share your own schedule.
@@ -75,7 +75,7 @@ export default function IndexPage() {
             <button>Find a schedule</button>
           </Link>
         </div>
-        <img src="../img/schedules.svg" className="w-1/2"></img>
+        <img src="../img/schedules.svg" className="w-1/2 hidden md:block"></img>
       </div>
       <div className="flex justify-center">
         <svg
@@ -93,7 +93,7 @@ export default function IndexPage() {
         </svg>
       </div>
       <div className="bg-mint text-center md:text-left flex justify-center md:items-center md:gap-10 px-6">
-        <img src="../img/example.svg" className="w-1/2"></img>
+        <img src="../img/example.svg" className="w-1/2 hidden md:block"></img>
         <div className="flex flex-col">
           <h1 className="max-w-lg font-syne font-bold soft text-3xl mt-3 md:mt-0">
             ✦ Stay organized and informed with the schedule page &

@@ -34,8 +34,8 @@ const BellScheduleSplit = ({ scheduleInfo }) => {
               key={index}
               className={
                 index % 2 === 0
-                  ? "bg-gray-100 hover:bg-gray-200 dark:bg-neutral-600 dark:hover:bg-neutral-500"
-                  : "bg-white hover:bg-gray-200 dark:bg-neutral-700 dark:hover:bg-neutral-500"
+                  ? "bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                  : "bg-transparent hover:bg-gray-200 dark:hover:bg-neutral-700"
               }
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
