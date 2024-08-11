@@ -14,6 +14,16 @@ export default function RegisterPage() {
   async function register(ev) {
     ev.preventDefault();
 
+    if (username === "") {
+      setError("Please enter a username.");
+      return;
+    }
+
+    if (password === "") {
+      setError("Please enter a password.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "/register",
@@ -23,22 +33,17 @@ export default function RegisterPage() {
         }
       );
 
-      if (response.status === 200 && password !== "") {
+      if (response.status === 200) {
         setRedirect(true);
-      } else if (username === "") {
-        setError("Enter a username.");
-      } else if (password === "") {
-        setError("Enter a password.");
       } else {
-        setError(
-          "Unable to register. That username may already be taken. Please try again."
-        );
+        setError("An unexpected error occurred. Please try again.");
       }
     } catch (error) {
-      console.error("Registration failed:", error);
-      setError(
-        "Unable to register. That username may already be taken. Please try again."
-      );
+      if (error.response && error.response.status === 400) {
+        setError("That username is already taken.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   }
 
@@ -85,7 +90,7 @@ export default function RegisterPage() {
                 placeholder=""
               />
               <label
-                for="usernameInput"
+                htmlFor="usernameInput"
                 className="absolute rounded-lg text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-mint peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
               >
                 Username
@@ -101,7 +106,7 @@ export default function RegisterPage() {
                 placeholder=""
               />
               <label
-                for="passwordInput"
+                htmlFor="passwordInput"
                 className="absolute rounded-lg text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-mint peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
               >
                 Password

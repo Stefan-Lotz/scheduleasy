@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Navigate } from "react-router-dom";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
 export default function CreatePage() {
@@ -11,6 +12,8 @@ export default function CreatePage() {
   const [url, setURL] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [periods, setPeriods] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   function handlePeriodsChange(ev, index, field) {
     const newPeriods = periods.map((period, i) =>
@@ -30,6 +33,33 @@ export default function CreatePage() {
 
   async function createNewSchedule(ev) {
     ev.preventDefault();
+
+    if (!title) {
+      setError("Please enter a title for your schedule.");
+      return;
+    } else if (!about) {
+      setError("Please enter a short description for your schedule.");
+      return;
+    } else if (!numPeriods || numPeriods <= 0) {
+      setError("Please add at least one period to your schedule.");
+      return;
+    } else if (
+      periods.some(
+        (period) => !period.name || !period.startTime || !period.endTime
+      )
+    ) {
+      setError("Please enter a name and time for each period.");
+      return;
+    } else if (!url) {
+      setError("Please enter a valid URL.");
+      return;
+    } else if (!files) {
+      setError("Please upload a file for your schedule's cover.");
+      return;
+    }
+
+    setIsLoading(true);
+
     const data = new FormData();
     data.set("title", title);
     data.set("about", about);
@@ -39,16 +69,20 @@ export default function CreatePage() {
     data.set("periods", JSON.stringify(periods));
 
     try {
-      const response = await axios.post(
-        "/schedule",
-        data,
-        { withCredentials: true }
-      );
+      const response = await axios.post("/schedule", data, {
+        withCredentials: true,
+      });
       if (response.status === 200) {
         setRedirect(true);
       }
     } catch (error) {
-      console.error("Error creating new schedule:", error);
+      if (error.response && error.response.status === 400) {
+        setError("That URL is already taken.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -58,12 +92,25 @@ export default function CreatePage() {
 
   return (
     <div className="font-syne dark:text-white">
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center bg-neutral-800 bg-opacity-85 justify-center">
+          <div>
+            <ArrowPathIcon className="size-20 animate-spin text-white mx-auto"></ArrowPathIcon>
+          <p className="font-syne text-xl text-white">Creating your schedule...</p>
+          </div>
+        </div>
+      )}
       <Helmet>
         <title>Create | Scheduleasy</title>
       </Helmet>
       <h1 className="text-center py-5 text-3xl font-semibold">
         Create a schedule!
       </h1>
+      {error && (
+        <div className="bg-salmon rounded-md text-center font-syne border-2 border-amber-700 text-white mb-5 max-w-xl mx-auto text-wrap">
+          {error}
+        </div>
+      )}
       <form
         onSubmit={createNewSchedule}
         className="flex flex-col gap-7 max-w-xl w-full px-5 sm:px-0 mx-auto"

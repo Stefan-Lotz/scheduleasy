@@ -69,13 +69,18 @@ app.post("/api/register", async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
     const userDoc = await User.create({
       username,
       password: bcrypt.hashSync(password, salt),
     });
-    res.json(userDoc);
+    res.status(200).json(userDoc);
   } catch (e) {
-    res.status(400).json(e);
+    res.status(500).json({ message: "An unexpected error occurred." });
   }
 });
 
@@ -140,6 +145,12 @@ app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
       const { originalname, path, mimetype } = req.file;
       const coverUrl = await uploadToS3(path, originalname, mimetype);
       const { title, about, numPeriods, url, periods } = req.body;
+
+      const existingUrl = await ScheduleModel.findOne({ url });
+      if (existingUrl) {
+        return res.status(400).json({ message: "URL is already taken" });
+      }
+
       const periodsArray = JSON.parse(periods);
 
       const scheduleDoc = await ScheduleModel.create({
@@ -152,7 +163,7 @@ app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
         periods: periodsArray,
       });
 
-      res.json(scheduleDoc);
+      res.status(200).json(scheduleDoc);
     } catch (error) {
       console.error("Error creating schedule: ", error);
       res.status(400).json({ error: "Failed to create schedule" });

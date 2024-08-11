@@ -3,7 +3,7 @@ const { Schema, model } = mongoose;
 
 const ScheduleSchema = new Schema(
   {
-    title: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
     about: { type: String, required: true },
     cover: { type: String, required: true },
     numPeriods: { type: Number, required: true },
