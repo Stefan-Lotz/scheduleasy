@@ -15,6 +15,7 @@ const MobileSchedulePage = ({
   messageContainerRef,
   sendIsHovered,
   setSendIsHovered,
+  periods,
 }) => {
   const [openTab, setOpenTab] = useState(2);
 
@@ -107,7 +108,7 @@ const MobileSchedulePage = ({
               />
             </div>
             <div className={openTab === 2 ? "block" : "hidden"}>
-              <BellScheduleSplit scheduleInfo={scheduleInfo} />
+              <BellScheduleSplit periods={periods} />
             </div>
             <div className={openTab === 3 ? "block" : "hidden"}>
               <InformationSplit

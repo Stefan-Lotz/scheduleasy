@@ -132,7 +132,6 @@ const uploadMiddleware = multer({ dest: "/tmp" });
 
 app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
-
   const { token } = req.cookies;
 
   jwt.verify(token, process.env.SECRET, async (err, info) => {
@@ -144,7 +143,8 @@ app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
     try {
       const { originalname, path, mimetype } = req.file;
       const coverUrl = await uploadToS3(path, originalname, mimetype);
-      const { title, about, numPeriods, url, periods } = req.body;
+      const { title, about, numPeriods, url, periods, alternateSchedule } =
+        req.body;
 
       const existingUrl = await ScheduleModel.findOne({ url });
       if (existingUrl) {
@@ -152,6 +152,10 @@ app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
       }
 
       const periodsArray = JSON.parse(periods);
+      let alternateScheduleData = null;
+      if (alternateSchedule) {
+        alternateScheduleData = JSON.parse(alternateSchedule);
+      }
 
       const scheduleDoc = await ScheduleModel.create({
         title,
@@ -161,6 +165,7 @@ app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
         url,
         author: info.id,
         periods: periodsArray,
+        alternateSchedule: alternateScheduleData,
       });
 
       res.status(200).json(scheduleDoc);
@@ -232,7 +237,7 @@ app.put(
     mongoose.connect(process.env.MONGODB_URI);
     try {
       const { url } = req.params;
-      const { title, about, numPeriods, periods } = req.body;
+      const { title, about, numPeriods, periods, alternateSchedule } = req.body;
       const { token } = req.cookies;
       let newPath;
 
@@ -266,6 +271,22 @@ app.put(
         schedule.numPeriods = numPeriods || schedule.numPeriods;
         schedule.periods = periods ? JSON.parse(periods) : schedule.periods;
         if (newPath) schedule.cover = newPath;
+
+        if (alternateSchedule) {
+          const { periods: altPeriods, activeDays: altActiveDays } =
+            JSON.parse(alternateSchedule);
+          if (schedule.alternateSchedule) {
+            schedule.alternateSchedule.periods =
+              altPeriods || schedule.alternateSchedule.periods;
+            schedule.alternateSchedule.activeDays =
+              altActiveDays || schedule.alternateSchedule.activeDays;
+          } else {
+            schedule.alternateSchedule = {
+              periods: altPeriods,
+              activeDays: altActiveDays,
+            };
+          }
+        }
 
         await schedule.save();
         res.json(schedule);

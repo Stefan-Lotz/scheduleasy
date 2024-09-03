@@ -20,6 +20,7 @@ const DesktopSchedulePage = ({
   messageContainerRef,
   sendIsHovered,
   setSendIsHovered,
+  periods,
 }) => {
   if (!scheduleInfo) {
     return null;
@@ -78,7 +79,7 @@ const DesktopSchedulePage = ({
           <div className="flex justify-center">
             <EllipsisHorizontalCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
           </div>
-          <BellScheduleSplit scheduleInfo={scheduleInfo} />
+          <BellScheduleSplit periods={periods} />
         </div>
         <div>
           <div className="flex justify-center">

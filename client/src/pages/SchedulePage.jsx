@@ -72,7 +72,16 @@ const SchedulePage = ({ handleTheme }) => {
       let currentPeriod = null;
       let timeLeft = 0;
 
-      for (const period of scheduleInfo.periods) {
+      const today = now.toLocaleString("en-US", { weekday: "long" });
+      const isAlternateScheduleActive =
+        scheduleInfo.alternateSchedule &&
+        scheduleInfo.alternateSchedule.activeDays.includes(today);
+
+      const periods = isAlternateScheduleActive
+        ? scheduleInfo.alternateSchedule.periods
+        : scheduleInfo.periods;
+
+      for (const period of periods) {
         const [startHour, startMinute] = period.startTime
           .split(":")
           .map(Number);
@@ -125,7 +134,7 @@ const SchedulePage = ({ handleTheme }) => {
     [startFireworks]
   );
 
-  function firework() {
+  const firework = () => {
     confetti({
       startVelocity: 30,
       ticks: 60,
@@ -146,7 +155,7 @@ const SchedulePage = ({ handleTheme }) => {
         y: Math.random() - 0.1,
       },
     });
-  }
+  };
 
   function useScreenWidth() {
     const [width, setWidth] = useState(window.innerWidth);
@@ -197,6 +206,18 @@ const SchedulePage = ({ handleTheme }) => {
     return () => clearInterval(intervalId);
   }, [scheduleInfo, updateCurrentPeriod]);
 
+  const getActiveSchedulePeriods = useCallback(() => {
+    const now = new Date();
+    const today = now.toLocaleString("en-US", { weekday: "long" });
+    const isAlternateScheduleActive =
+      scheduleInfo?.alternateSchedule &&
+      scheduleInfo.alternateSchedule.activeDays.includes(today);
+
+    return isAlternateScheduleActive
+      ? scheduleInfo.alternateSchedule.periods
+      : scheduleInfo.periods;
+  }, [scheduleInfo]);
+
   if (!scheduleInfo) return "";
 
   return (
@@ -214,6 +235,7 @@ const SchedulePage = ({ handleTheme }) => {
           messageContainerRef={messageContainerRef}
           sendIsHovered={sendIsHovered}
           setSendIsHovered={setSendIsHovered}
+          periods={getActiveSchedulePeriods()}
         />
       ) : (
         <DesktopSchedulePage
@@ -227,6 +249,7 @@ const SchedulePage = ({ handleTheme }) => {
           messageContainerRef={messageContainerRef}
           sendIsHovered={sendIsHovered}
           setSendIsHovered={setSendIsHovered}
+          periods={getActiveSchedulePeriods()}
         />
       )}
     </>

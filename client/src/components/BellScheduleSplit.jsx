@@ -1,6 +1,6 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 
-const BellScheduleSplit = ({ scheduleInfo }) => {
+const BellScheduleSplit = ({ periods }) => {
   const [hoveredRowIndex, setHoveredRowIndex] = useState(null);
 
   function formatTime(time) {
@@ -29,7 +29,7 @@ const BellScheduleSplit = ({ scheduleInfo }) => {
     <div className="truncate">
       <table className="w-full max-w-sm m-auto dark:text-neutral-200">
         <tbody>
-          {scheduleInfo.periods?.map((period, index) => (
+          {periods?.map((period, index) => (
             <tr
               key={index}
               className={

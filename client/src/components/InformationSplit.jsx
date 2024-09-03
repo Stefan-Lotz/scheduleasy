@@ -39,35 +39,22 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
     }
 
     async function fetchLinkedSchedule() {
-      try {
-        const allSchedulesResponse = await axios.get("/schedule", {
-          withCredentials: true,
-        });
-
-        if (allSchedulesResponse.status === 200) {
-          const allSchedules = allSchedulesResponse.data;
-
-          const linked = allSchedules.find(
-            (schedule) => schedule.url === scheduleInfo.linkedSchedule
+      if (scheduleInfo.linkedSchedule) {
+        try {
+          const response = await axios.get(
+            `/schedule/${scheduleInfo.linkedSchedule}`,
+            {
+              withCredentials: true,
+            }
           );
 
-          if (linked) {
-            setSelectedSchedule(linked);
-            setLinkedScheduleTitle(linked.title);
-          } else {
-            const linkedResponse = await axios.get(
-              `/${scheduleInfo.linkedSchedule}`,
-              { withCredentials: true }
-            );
-
-            if (linkedResponse.status === 200) {
-              const linkedSchedule = linkedResponse.data;
-              setLinkedScheduleTitle(linkedSchedule.title);
-            }
+          if (response.status === 200) {
+            const linkedSchedule = response.data;
+            setLinkedScheduleTitle(linkedSchedule.title);
           }
+        } catch (error) {
+          console.error("Error fetching linked schedule:", error);
         }
-      } catch (error) {
-        console.error("Error fetching schedules:", error);
       }
     }
 
@@ -183,7 +170,7 @@ const InformationSplit = ({ scheduleInfo, userInfo }) => {
         </p>
         {scheduleInfo.linkedSchedule && (
           <Link
-            to={"/schedule/" + scheduleInfo.linkedSchedule}
+            to={`/schedule/${scheduleInfo.linkedSchedule}`}
             className="border border-222 dark:border-white rounded-md py-1 px-3 mx-auto flex items-center gap-3 hover:text-mint hover:border-mint"
           >
             {linkedScheduleTitle}
