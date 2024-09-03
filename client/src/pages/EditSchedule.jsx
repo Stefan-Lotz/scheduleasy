@@ -430,9 +430,14 @@ export default function EditSchedule() {
             </div>
           </div>
         )}
-        <button className="mx-auto rounded-2xl py-2 px-4 bg-mint hover:bg-[#1f756a] text-white font-shrikhand text-xl">
-          Update Schedule
-        </button>
+        <div className="grid m-auto">
+          <button className="justify-center transition absolute ease-in-out hover:-translate-x-2 hover:-translate-y-2 bg-mint border-white dark:border-222 border-2 text-white text-center p-3 font-shrikhand rounded-2xl text-xl">
+            <div>Update Schedule!</div>
+          </button>
+          <div className="justify-center bg-slate text-slate select-none text-center p-3 font-shrikhand border-white dark:border-222 border-2 rounded-2xl text-xl">
+            Update Schedule!
+          </div>
+        </div>
       </form>
     </div>
   );

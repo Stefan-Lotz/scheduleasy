@@ -75,7 +75,7 @@ const DesktopSchedulePage = ({
             updateCurrentPeriod={updateCurrentPeriod}
           />
         </div>
-        <div>
+        <div className="overflow-y-scroll scrollbar-none">
           <div className="flex justify-center">
             <EllipsisHorizontalCircleIcon className="w-6 h-6 my-2 hover:animate-spin dark:text-white" />
           </div>

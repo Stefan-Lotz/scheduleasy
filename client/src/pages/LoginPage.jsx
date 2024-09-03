@@ -123,9 +123,14 @@ export default function LoginPage() {
                 )}
               </div>
             </div>
-            <button className="bg-salmon px-10 py-3 rounded-2xl font-shrikhand text-white text-2xl hover:bg-[#e45c3b]">
-              Login
-            </button>
+            <div className="flex justify-center">
+              <button className="justify-center transition absolute ease-in-out hover:-translate-x-2 hover:-translate-y-2 bg-salmon hover:bg-[#e45c3b] border-222 border-2 text-white text-center px-10 py-3 font-shrikhand rounded-2xl text-2xl">
+                <div>Login</div>
+              </button>
+              <div className="justify-center bg-222 text-222 select-none text-center px-10 py-3 font-shrikhand border-transparent border-2 rounded-2xl text-2xl">
+                Login
+              </div>
+            </div>
           </form>
           <div className="inline-flex items-center justify-center w-full font-syne">
             <hr className="w-11/12 md:w-full md:max-w-lg h-px my-8 bg-gray-300 border-0" />
@@ -135,7 +140,7 @@ export default function LoginPage() {
           </div>
           <Link
             to="/register"
-            className="bg-mint py-1 px-4 text-white font-syne rounded-full hover:bg-slate"
+            className="bg-mint py-1 px-4 text-white font-syne rounded-3xl transition-all ease-in-out duration-300 hover:rounded-sm hover:bg-slate"
           >
             Sign Up
           </Link>

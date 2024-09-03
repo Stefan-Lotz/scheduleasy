@@ -208,7 +208,7 @@ const Header = ({ handleTheme }) => {
             <ArrowRightStartOnRectangleIcon className="size-6" />
           </Link>
           <div className="relative my-2">
-            <hr className="border-222 dark:border-white"/>
+            <hr className="border-222 dark:border-white" />
             <p className="text-sm px-0.5 font-bold absolute bg-gray-100 dark:bg-neutral-800 -top-[10px] left-2.5 cursor-default select-none">
               Your Schedules
             </p>
@@ -241,18 +241,30 @@ const Header = ({ handleTheme }) => {
         <nav className="gap-5 font-semibold">
           {username && (
             <>
-              <Link to="/schedules">Schedules</Link>
-              <Link to="/create">Create a Schedule</Link>
+              <Link
+                to="/schedules"
+                className="place-self-center group transition translate-y-[2px]"
+              >
+                Schedules
+                <span class="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
+              </Link>
+              <Link
+                to="/create"
+                className="place-self-center group transition translate-y-[2px]"
+              >
+                Create a Schedule
+                <span class="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
+              </Link>
               <div className="border-l-2 border-gray-300"></div>
               <div className="flex">
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="my-auto cursor-pointer"
+                  className="my-auto cursor-pointer dark:hover:bg-white hover:bg-222 hover:bg-opacity-30 dark:hover:bg-opacity-30 rounded-full p-1"
                 >
                   {userMenu ? (
-                    <XMarkIcon className="size-7 text-222 dark:text-white" />
+                    <XMarkIcon className="size-6 text-222 dark:text-white" />
                   ) : (
-                    <UserCircleIcon className="size-7 text-222 dark:text-white" />
+                    <UserCircleIcon className="size-6 text-222 dark:text-white" />
                   )}
                 </button>
                 {userMenu && toggleUserMenu()}
@@ -261,22 +273,34 @@ const Header = ({ handleTheme }) => {
           )}
           {!username && (
             <>
-              <Link to="/schedules">Schedules</Link>
-              <Link to="/login">Login</Link>
+              <Link
+                to="/schedules"
+                className="place-self-center group transition translate-y-[2px]"
+              >
+                Schedules
+                <span class="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
+              </Link>
+              <Link
+                to="/login"
+                className="place-self-center group transition translate-y-[2px]"
+              >
+                Login
+                <span class="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
+              </Link>
               <Link
                 to="/register"
-                className="bg-mint px-3 text-white rounded-full hover:bg-[#1f756a]"
+                className="bg-mint px-3 text-white rounded-3xl transition-all ease-in-out duration-300 hover:rounded-sm hover:bg-[#1f756a] place-self-center"
               >
                 Register
               </Link>
-              <div className="border-l-2 border-gray-300"></div>
+              <div className="border-l-2 border-gray-300" />
               <button
                 onClick={handleThemeClick}
-                className="size-6 my-auto cursor-pointer"
+                className="my-auto cursor-pointer dark:hover:bg-white hover:bg-222 hover:bg-opacity-30 dark:hover:bg-opacity-30 rounded-full p-1"
               >
-                {theme === "light" && <SunIcon />}
-                {theme === "dark" && <MoonIcon />}
-                {theme === "os" && <ComputerDesktopIcon />}
+                {theme === "light" && <SunIcon className="size-6" />}
+                {theme === "dark" && <MoonIcon className="size-6" />}
+                {theme === "os" && <ComputerDesktopIcon className="size-6" />}
               </button>
             </>
           )}
@@ -289,7 +313,7 @@ const Header = ({ handleTheme }) => {
         <nav>
           {username && (
             <>
-              <button onClick={() => setPopUpMenu(!popUpMenu)}>
+              <button onClick={() => setPopUpMenu(!popUpMenu)} className="my-auto cursor-pointer dark:hover:bg-white hover:bg-222 hover:bg-opacity-30 dark:hover:bg-opacity-30 rounded-full p-1">
                 {popUpMenu ? (
                   <XMarkIcon className="size-7 text-222 dark:text-white" />
                 ) : (
@@ -301,7 +325,7 @@ const Header = ({ handleTheme }) => {
           )}
           {!username && (
             <>
-              <button onClick={() => setPopUpMenu(!popUpMenu)}>
+              <button onClick={() => setPopUpMenu(!popUpMenu)} className="my-auto cursor-pointer dark:hover:bg-white hover:bg-222 hover:bg-opacity-30 dark:hover:bg-opacity-30 rounded-full p-1">
                 {popUpMenu ? (
                   <XMarkIcon className="size-7 text-222 dark:text-white" />
                 ) : (
