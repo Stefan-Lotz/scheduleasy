@@ -2,19 +2,19 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Navigate } from "react-router-dom";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import Slider from "../components/Slider";
 import axios from "axios";
 
 export default function CreatePage() {
   const [title, setTitle] = useState("");
   const [about, setAbout] = useState("");
-  const [numPeriods, setNumPeriods] = useState("");
+  const [numPeriods, setNumPeriods] = useState(0);
   const [files, setFiles] = useState("");
   const [url, setURL] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [periods, setPeriods] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [hasAlternateSchedule, setHasAlternateSchedule] = useState(false);
   const [alternatePeriods, setAlternatePeriods] = useState([]);
   const [activeDays, setActiveDays] = useState([]);
 
@@ -26,8 +26,7 @@ export default function CreatePage() {
     isAlternate ? setAlternatePeriods(newPeriods) : setPeriods(newPeriods);
   }
 
-  function handleNumPeriodsChange(ev, isAlternate = false) {
-    const value = parseInt(ev.target.value, 10);
+  function handleNumPeriodsChange(value, isAlternate = false) {
     if (isAlternate) {
       const newPeriods = Array(value)
         .fill()
@@ -43,10 +42,6 @@ export default function CreatePage() {
         .map((_, i) => periods[i] || { name: "", startTime: "", endTime: "" });
       setPeriods(newPeriods);
     }
-  }
-
-  function toggleAlternateSchedule() {
-    setHasAlternateSchedule(!hasAlternateSchedule);
   }
 
   async function createNewSchedule(ev) {
@@ -85,16 +80,13 @@ export default function CreatePage() {
     data.set("numPeriods", numPeriods);
     data.set("url", url);
     data.set("periods", JSON.stringify(periods));
-
-    if (hasAlternateSchedule) {
-      data.set(
-        "alternateSchedule",
-        JSON.stringify({
-          periods: alternatePeriods,
-          activeDays: activeDays,
-        })
-      );
-    }
+    data.set(
+      "alternateSchedule",
+      JSON.stringify({
+        periods: alternatePeriods,
+        activeDays: activeDays,
+      })
+    );
 
     try {
       const response = await axios.post("/schedule", data, {
@@ -104,8 +96,16 @@ export default function CreatePage() {
         setRedirect(true);
       }
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      if (
+        error.response &&
+        error.response.data.message === "URL is already taken"
+      ) {
         setError("That URL is already taken.");
+      } else if (
+        error.response &&
+        error.response.data.message === "Title is already taken"
+      ) {
+        setError("That title is already taken.");
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
@@ -191,17 +191,16 @@ export default function CreatePage() {
           >
             Choose how many periods your schedule has.
           </label>
-          <input
-            type="number"
-            placeholder={"Number of periods"}
-            id="numPeriods"
-            value={numPeriods}
-            className="bg-gray-50 border font-sans border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
-            onChange={handleNumPeriodsChange}
-          />
           <p className="mt-2 text-sm text-gray-500 dark:text-neutral-400">
             Periods such as "lunch" or "break" should also be accounted for.
           </p>
+          <Slider
+            min={0}
+            max={20}
+            value={numPeriods}
+            onChange={handleNumPeriodsChange}
+            id="numPeriods"
+          />
         </div>
         <div className="max-h-[560px] overflow-y-scroll scrollbar scrollbar-track-transparent scrollbar-thumb-gray-500">
           {periods.map((period, index) => (
@@ -300,164 +299,156 @@ export default function CreatePage() {
             PNG or JPG (Suggested size: 150 x 150px).
           </p>
         </div>
-
-        <label className="block items-center cursor-pointer">
-          <label
-            className="block mb-2 text-sm font-medium text-222 dark:text-white"
-            htmlFor="altCheckbox"
-          >
-            Add alternate schedule?
-          </label>
-          <input
-            type="checkbox"
-            id="altCheckbox"
-            checked={hasAlternateSchedule}
-            onChange={toggleAlternateSchedule}
-            className="sr-only peer"
-          />
-          <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#1f756a] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-mint"></div>
-        </label>
-        <p className="-mt-5 text-sm text-gray-500 dark:text-neutral-400">
-          Give your schedule different periods on certain days of the week
-          automatically.
-        </p>
-        {hasAlternateSchedule && (
-          <div>
-            <label className="block mb-2 text-sm font-medium text-222 dark:text-white">
-              Choose which day(s) the alternate schedule should activate.
+        <div className="border rounded-lg">
+          <div className="flex flex-col gap-7 sm:px-0 m-2">
+            <label className="block items-center cursor-pointer">
+              <label
+                className="block text-sm font-medium text-222 dark:text-white"
+                htmlFor="altCheckbox"
+              >
+                Add alternate schedule (optional)
+              </label>
             </label>
-            <ul className="items-center w-full text-sm font-medium text-222 border border-gray-200 rounded-lg sm:flex bg-transparent select-none mb-7">
-              {[
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-              ].map((day, index) => (
-                <li
-                  key={day}
-                  className={`w-full 
+            <p className="text-sm text-gray-500 dark:text-neutral-400">
+              Give your schedule different periods on certain days of the week
+              automatically.
+            </p>
+            <div>
+              <label className="block mb-2 text-sm font-medium text-222 dark:text-white">
+                Choose which day(s) the alternate schedule should activate.
+              </label>
+              <ul className="items-center w-full text-sm font-medium text-222 border border-gray-200 rounded-lg sm:flex bg-transparent select-none mb-7">
+                {[
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday",
+                ].map((day, index) => (
+                  <li
+                    key={day}
+                    className={`w-full 
                     ${
                       index !== 6
                         ? "border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600"
                         : ""
                     }`}
-                >
-                  <div className="flex items-center text-center">
-                    <input
-                      id={`${day.toLowerCase()}CheckboxList`}
-                      type="checkbox"
-                      className="hidden peer"
-                      checked={activeDays.includes(day)}
-                      onChange={() => {
-                        const newDays = activeDays.includes(day)
-                          ? activeDays.filter((d) => d !== day)
-                          : [...activeDays, day];
-                        setActiveDays(newDays);
-                      }}
-                    />
-                    <label
-                      htmlFor={`${day.toLowerCase()}CheckboxList`}
-                      className={`w-full py-3 text-sm font-medium text-222 dark:text-white peer-checked:bg-mint peer-checked:text-white hover:cursor-pointer hover:text-white hover:bg-[#2eac9d] hover:peer-checked:bg-[#268e81] 
+                  >
+                    <div className="flex items-center text-center">
+                      <input
+                        id={`${day.toLowerCase()}CheckboxList`}
+                        type="checkbox"
+                        className="hidden peer"
+                        checked={activeDays.includes(day)}
+                        onChange={() => {
+                          const newDays = activeDays.includes(day)
+                            ? activeDays.filter((d) => d !== day)
+                            : [...activeDays, day];
+                          setActiveDays(newDays);
+                        }}
+                      />
+                      <label
+                        htmlFor={`${day.toLowerCase()}CheckboxList`}
+                        className={`w-full py-3 text-sm font-medium text-222 dark:text-white peer-checked:bg-mint peer-checked:text-white hover:cursor-pointer hover:text-white hover:bg-[#2eac9d] hover:peer-checked:bg-[#268e81] 
                         ${
                           index === 0
                             ? "rounded-tl-[.44rem] rounded-tr-[.44rem] sm:rounded-bl-[.44rem] sm:rounded-tr-none"
                             : ""
                         } ${
-                        index === 6
-                          ? "rounded-bl-[.44rem] rounded-br-[.44rem] sm:rounded-tr-[.44rem] sm:rounded-bl-none "
-                          : ""
-                      }`}
-                    >
-                      {day}
-                    </label>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                          index === 6
+                            ? "rounded-bl-[.44rem] rounded-br-[.44rem] sm:rounded-tr-[.44rem] sm:rounded-bl-none "
+                            : ""
+                        }`}
+                      >
+                        {day}
+                      </label>
+                    </div>
+                  </li>
+                ))}
+              </ul>
 
-            <div>
-              <label
-                htmlFor="numAltPeriods"
-                className="block mb-2 text-sm font-medium text-222 dark:text-white"
-              >
-                Choose how many periods your alternate schedule has.
-              </label>
-              <input
-                type="number"
-                placeholder={"Number of periods"}
-                id="numAltPeriods"
-                value={alternatePeriods.length}
-                className="bg-gray-50 border mb-7 font-sans border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
-                onChange={(ev) => handleNumPeriodsChange(ev, true)}
-              />
-            </div>
-
-            <div className="max-h-[560px] overflow-y-scroll scrollbar scrollbar-track-transparent scrollbar-thumb-gray-500">
-              {alternatePeriods.map((period, index) => (
-                <div
-                  key={index}
-                  className="grid gap-4 bg-gray-50 border border-gray-300 dark:bg-transparent dark:text-white rounded-lg p-3 font-sans mb-4"
+              <div>
+                <label
+                  htmlFor="numAltPeriods"
+                  className="block mb-2 text-sm font-medium text-222 dark:text-white"
                 >
-                  <div>
-                    <label
-                      htmlFor={`name${index}`}
-                      className="block mb-2 text-sm font-medium text-222 dark:text-white"
-                    >
-                      Period {index + 1} Name
-                    </label>
-                    <input
-                      type="text"
-                      id={`name${index}`}
-                      placeholder={`Period ${index + 1}`}
-                      className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
-                      value={period.name}
-                      onChange={(ev) =>
-                        handlePeriodsChange(ev, index, "name", true)
-                      }
-                    />
+                  Choose how many periods your alternate schedule has.
+                </label>
+                <Slider
+                  min={0}
+                  max={20}
+                  value={alternatePeriods.length}
+                  onChange={(ev) => handleNumPeriodsChange(ev, true)}
+                  id="numAltPeriods"
+                />
+              </div>
+
+              <div className="max-h-[560px] overflow-y-scroll scrollbar scrollbar-track-transparent scrollbar-thumb-gray-500">
+                {alternatePeriods.map((period, index) => (
+                  <div
+                    key={index}
+                    className="grid gap-4 bg-gray-50 border border-gray-300 dark:bg-transparent dark:text-white rounded-lg p-3 font-sans mb-4"
+                  >
+                    <div>
+                      <label
+                        htmlFor={`name${index}`}
+                        className="block mb-2 text-sm font-medium text-222 dark:text-white"
+                      >
+                        Period {index + 1} Name
+                      </label>
+                      <input
+                        type="text"
+                        id={`name${index}`}
+                        placeholder={`Period ${index + 1}`}
+                        className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                        value={period.name}
+                        onChange={(ev) =>
+                          handlePeriodsChange(ev, index, "name", true)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor={`startTime${index}`}
+                        className="block mb-2 text-sm font-medium text-222 dark:text-white"
+                      >
+                        Start Time {index + 1}
+                      </label>
+                      <input
+                        type="time"
+                        id={`startTime${index}`}
+                        className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                        value={period.startTime}
+                        onChange={(ev) =>
+                          handlePeriodsChange(ev, index, "startTime", true)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor={`endTime${index}`}
+                        className="block mb-2 text-sm font-medium text-222 dark:text-white"
+                      >
+                        End Time {index + 1}
+                      </label>
+                      <input
+                        type="time"
+                        id={`endTime${index}`}
+                        className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
+                        value={period.endTime}
+                        onChange={(ev) =>
+                          handlePeriodsChange(ev, index, "endTime", true)
+                        }
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label
-                      htmlFor={`startTime${index}`}
-                      className="block mb-2 text-sm font-medium text-222 dark:text-white"
-                    >
-                      Start Time {index + 1}
-                    </label>
-                    <input
-                      type="time"
-                      id={`startTime${index}`}
-                      className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
-                      value={period.startTime}
-                      onChange={(ev) =>
-                        handlePeriodsChange(ev, index, "startTime", true)
-                      }
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor={`endTime${index}`}
-                      className="block mb-2 text-sm font-medium text-222 dark:text-white"
-                    >
-                      End Time {index + 1}
-                    </label>
-                    <input
-                      type="time"
-                      id={`endTime${index}`}
-                      className="bg-gray-50 border border-gray-300 text-222 dark:bg-transparent dark:text-white text-sm rounded-lg focus:border-mint focus:outline-none focus:ring-0 block w-full p-2.5"
-                      value={period.endTime}
-                      onChange={(ev) =>
-                        handlePeriodsChange(ev, index, "endTime", true)
-                      }
-                    />
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        )}
+        </div>
         <div className="grid m-auto">
           <button className="justify-center transition absolute ease-in-out hover:-translate-x-2 hover:-translate-y-2 bg-mint border-white dark:border-222 border-2 text-white text-center p-3 font-shrikhand rounded-2xl text-xl">
             <div>Create Schedule!</div>

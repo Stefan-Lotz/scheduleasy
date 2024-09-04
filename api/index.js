@@ -150,6 +150,10 @@ app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
       if (existingUrl) {
         return res.status(400).json({ message: "URL is already taken" });
       }
+      const existingTitle = await ScheduleModel.findOne({ title });
+      if (existingTitle) {
+        return res.status(400).json({ message: "Title is already taken" });
+      }
 
       const periodsArray = JSON.parse(periods);
       let alternateScheduleData = null;
@@ -264,6 +268,13 @@ app.put(
         if (schedule.author.toString() !== info.id) {
           console.error("Forbidden: User is not the author of the schedule");
           return res.status(403).json("Forbidden");
+        }
+
+        if (schedule.title !== title) {
+          const existingTitle = await ScheduleModel.findOne({ title });
+          if (existingTitle) {
+            return res.status(400).json({ message: "Title is already taken" });
+          }
         }
 
         schedule.title = title || schedule.title;

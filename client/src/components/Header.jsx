@@ -246,14 +246,14 @@ const Header = ({ handleTheme }) => {
                 className="place-self-center group transition translate-y-[2px]"
               >
                 Schedules
-                <span class="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
+                <span className="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
               </Link>
               <Link
                 to="/create"
                 className="place-self-center group transition translate-y-[2px]"
               >
                 Create a Schedule
-                <span class="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
+                <span className="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
               </Link>
               <div className="border-l-2 border-gray-300"></div>
               <div className="flex">
@@ -278,14 +278,14 @@ const Header = ({ handleTheme }) => {
                 className="place-self-center group transition translate-y-[2px]"
               >
                 Schedules
-                <span class="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
+                <span className="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
               </Link>
               <Link
                 to="/login"
                 className="place-self-center group transition translate-y-[2px]"
               >
                 Login
-                <span class="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
+                <span className="block max-w-0 group-hover:max-w-full transition-all duration-200 h-0.5 bg-mint" />
               </Link>
               <Link
                 to="/register"
@@ -313,7 +313,10 @@ const Header = ({ handleTheme }) => {
         <nav>
           {username && (
             <>
-              <button onClick={() => setPopUpMenu(!popUpMenu)} className="my-auto cursor-pointer dark:hover:bg-white hover:bg-222 hover:bg-opacity-30 dark:hover:bg-opacity-30 rounded-full p-1">
+              <button
+                onClick={() => setPopUpMenu(!popUpMenu)}
+                className="my-auto cursor-pointer dark:hover:bg-white hover:bg-222 hover:bg-opacity-30 dark:hover:bg-opacity-30 rounded-full p-1"
+              >
                 {popUpMenu ? (
                   <XMarkIcon className="size-7 text-222 dark:text-white" />
                 ) : (
@@ -325,7 +328,10 @@ const Header = ({ handleTheme }) => {
           )}
           {!username && (
             <>
-              <button onClick={() => setPopUpMenu(!popUpMenu)} className="my-auto cursor-pointer dark:hover:bg-white hover:bg-222 hover:bg-opacity-30 dark:hover:bg-opacity-30 rounded-full p-1">
+              <button
+                onClick={() => setPopUpMenu(!popUpMenu)}
+                className="my-auto cursor-pointer dark:hover:bg-white hover:bg-222 hover:bg-opacity-30 dark:hover:bg-opacity-30 rounded-full p-1"
+              >
                 {popUpMenu ? (
                   <XMarkIcon className="size-7 text-222 dark:text-white" />
                 ) : (
