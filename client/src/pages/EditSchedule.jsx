@@ -284,6 +284,7 @@ export default function EditSchedule() {
           </label>
           <input
             type="file"
+            accept="image/png, image/jpeg"
             id="file"
             className="block w-full text-sm text-222 dark:bg-transparent dark:text-white border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:border-0 file:bg-gray-600 file:py-[7px] file:text-white file:px-3 hover:file:bg-gray-700 file:mr-3"
             onChange={(ev) => setFiles(ev.target.files)}
