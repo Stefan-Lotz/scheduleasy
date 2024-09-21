@@ -12,9 +12,14 @@ const cookieParser = require("cookie-parser");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const multer = require("multer");
 const fs = require("fs");
+const path = require("path");
 const UserMessageModel = require("./models/UserMessage");
 const { Server } = require("socket.io");
 const http = require("http");
+
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const mailgun = require("nodemailer-mailgun-transport");
 
 const salt = bcrypt.genSaltSync(10);
 const bucket = "scheduleasy";
@@ -23,6 +28,39 @@ app.use(cors({ credentials: true, origin: process.env.CORS_ALLOWED_ORIGINS }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
+
+const auth = {
+  auth: {
+    api_key: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN,
+  },
+};
+
+const transporter = nodemailer.createTransport(mailgun(auth));
+
+const sendVerificationEmail = async (email, token) => {
+  const verificationLink = `${process.env.CORS_ALLOWED_ORIGINS}/verify-email?token=${token}`;
+
+  const htmlTemplate = fs.readFileSync(
+    path.join(__dirname, "emails", "verificationEmail.html"),
+    "utf8"
+  );
+
+  const emailHTML = htmlTemplate.replace(
+    /%%verificationLink%%/g,
+    verificationLink
+  );
+
+  const mailOptions = {
+    from: "Scheduleasy <noreply@scheduleasy.org>",
+    to: email,
+    subject: "Email Verification",
+    text: `Please verify your email by clicking on the following link: ${verificationLink}`,
+    html: emailHTML,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
 
 async function uploadToS3(path, originalFilename, mimetype) {
   const client = new S3Client({
@@ -66,20 +104,71 @@ io.on("connection", (socket) => {
 
 app.post("/api/register", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   try {
+    await User.deleteOne({ username, isVerified: false });
+    await User.deleteOne({ email, isVerified: false });
+
     const existingUser = await User.findOne({ username });
+    const existingEmail = await User.findOne({ email });
+
     if (existingUser) {
-      return res.status(400).json({ message: "Username already taken" });
+      return res
+        .status(400)
+        .json({ message: "That username is already in use" });
     }
+
+    if (existingEmail) {
+      return res.status(400).json({ message: "That email is already in use" });
+    }
+
+    const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
     const userDoc = await User.create({
       username,
-      password: bcrypt.hashSync(password, salt),
+      password: hashedPassword,
+      email,
+      emailVerificationToken,
     });
-    res.status(200).json(userDoc);
+
+    await sendVerificationEmail(email, emailVerificationToken);
+
+    res
+      .status(200)
+      .json({ message: "Verification email sent. Please check your inbox." });
   } catch (e) {
+    res.status(500).json({ message: "An unexpected error occurred." });
+  }
+});
+
+app.get("/api/verify-email", async (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.status(400).json({ message: "Token is missing." });
+  }
+
+  try {
+    const user = await User.findOne({ emailVerificationToken: token });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token." });
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    setTimeout(async () => {
+      user.emailVerificationToken = null;
+      await user.save();
+    }, 1000);
+
+    res.status(200).json({ message: "Email successfully verified." });
+  } catch (e) {
+    console.error("Error verifying email:", e);
     res.status(500).json({ message: "An unexpected error occurred." });
   }
 });
@@ -87,12 +176,30 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   mongoose.connect(process.env.MONGODB_URI);
   const { username, password } = req.body;
-  const userDoc = await User.findOne({ username });
-  var passOk = "";
-  password === ""
-    ? (passOk = "")
-    : (passOk = bcrypt.compareSync(password, userDoc.password));
-  if (passOk) {
+
+  if (!username || !password) {
+    return res.status(400).json("All fields must have a value!");
+  }
+
+  try {
+    const userDoc = await User.findOne({ username });
+
+    if (!userDoc) {
+      return res.status(400).json("Invalid credentials!");
+    }
+
+    const passOk = bcrypt.compareSync(password, userDoc.password);
+
+    if (!passOk) {
+      return res.status(400).json("Invalid credentials!");
+    }
+
+    if (!userDoc.isVerified) {
+      return res
+        .status(403)
+        .json("Your account is not verified. Please check your email.");
+    }
+
     jwt.sign(
       { username, id: userDoc._id },
       process.env.SECRET,
@@ -105,8 +212,8 @@ app.post("/api/login", async (req, res) => {
         });
       }
     );
-  } else {
-    res.status(400).json("Wrong credentials!");
+  } catch (error) {
+    res.status(500).json("Server error");
   }
 });
 
@@ -135,9 +242,12 @@ app.post("/api/schedule", uploadMiddleware.single("file"), async (req, res) => {
   const { token } = req.cookies;
 
   jwt.verify(token, process.env.SECRET, async (err, info) => {
-    if (err) {
-      console.error("JWT Error: ", err);
-      return res.status(401).json("Unauthorized");
+    if (err) return res.status(401).json("Unauthorized");
+
+    const user = await User.findById(info.id);
+
+    if (!user.isVerified) {
+      return res.status(403).json("Your account is not verified.");
     }
 
     try {
@@ -209,6 +319,12 @@ app.post("/api/schedule/:url/message", async (req, res) => {
   jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
     if (err) return res.status(401).json("Invalid token");
 
+    const user = await User.findById(info.id);
+
+    if (!user.isVerified) {
+      return res.status(403).json("Your account is not verified.");
+    }
+
     try {
       const schedule = await ScheduleModel.findOne({ url });
       if (!schedule) {
@@ -246,9 +362,12 @@ app.put(
       let newPath;
 
       jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
-        if (err) {
-          console.error("JWT Verification Error:", err);
-          return res.status(401).json("Unauthorized");
+        if (err) return res.status(401).json("Unauthorized");
+
+        const user = await User.findById(info.id);
+
+        if (!user.isVerified) {
+          return res.status(403).json("Your account is not verified.");
         }
 
         if (req.file) {
@@ -331,9 +450,12 @@ app.delete("/api/schedule/:url", async (req, res) => {
     const { token } = req.cookies;
 
     jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
-      if (err) {
-        console.error("JWT Error: ", err);
-        return res.status(401).json("Unauthorized");
+      if (err) return res.status(401).json("Unauthorized");
+
+      const user = await User.findById(info.id);
+
+      if (!user.isVerified) {
+        return res.status(403).json("Your account is not verified.");
       }
 
       const session = await mongoose.startSession();
@@ -405,6 +527,12 @@ app.put("/api/schedule/:url/link", async (req, res) => {
 
   jwt.verify(token, process.env.SECRET, {}, async (err, info) => {
     if (err) return res.status(401).json("Invalid token");
+
+    const user = await User.findById(info.id);
+
+    if (!user.isVerified) {
+      return res.status(403).json("Your account is not verified.");
+    }
 
     try {
       const schedule = await ScheduleModel.findOne({ url });

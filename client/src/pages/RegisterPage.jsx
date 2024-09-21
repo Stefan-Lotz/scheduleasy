@@ -10,9 +10,15 @@ export default function RegisterPage() {
   const [redirect, setRedirect] = useState(false);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
 
   async function register(ev) {
     ev.preventDefault();
+
+    if (email === "") {
+      setError("Please enter a vaild email.");
+      return;
+    }
 
     if (username === "") {
       setError("Please enter a username.");
@@ -24,10 +30,15 @@ export default function RegisterPage() {
       return;
     }
 
+    if (email === "") {
+      setError("Please enter a valid email.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "/register",
-        { username, password },
+        { username, password, email },
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -40,7 +51,7 @@ export default function RegisterPage() {
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        setError("That username is already taken.");
+        setError(error.response.data.message);
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
@@ -80,6 +91,22 @@ export default function RegisterPage() {
                 {error}
               </div>
             )}
+            <div className="relative">
+              <input
+                type="email"
+                id="emailInput"
+                value={email}
+                onChange={(ev) => setEmail(ev.target.value)}
+                className="block my-6 px-2.5 pb-2.5 pt-4 w-full text-sm text-222 rounded-lg border-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-mint peer"
+                placeholder=""
+              />
+              <label
+                htmlFor="emailInput"
+                className="absolute rounded-lg text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-mint peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+              >
+                Email
+              </label>
+            </div>
             <div className="relative">
               <input
                 type="text"

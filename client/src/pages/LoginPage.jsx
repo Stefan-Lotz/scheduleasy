@@ -21,6 +21,13 @@ export default function LoginPage() {
   async function login(ev) {
     ev.preventDefault();
 
+    // Reset error state
+    setError("");
+
+    if (username === "" || password === "") {
+      return setError("All fields must have a value!");
+    }
+
     try {
       const response = await axios.post(
         "/login",
@@ -31,18 +38,25 @@ export default function LoginPage() {
         }
       );
 
-      if (response.status === 200 && username !== "" && password !== "") {
+      if (response.status === 200) {
         const userInfo = response.data;
         setUserInfo(userInfo);
         setRedirect(true);
-      } else if (username === "" || password === "") {
-        setError("All fields must have a value!");
-      } else {
-        setError("Invalid credentials!");
       }
     } catch (error) {
-      console.error("Login failed:", error);
-      setError("Invalid credentials!");
+      if (error.response) {
+        if (error.response.status === 403) {
+          setError(
+            "Your email has not been verified. Please check your inbox or spam folder."
+          );
+        } else if (error.response.status === 400) {
+          setError(error.response.data);
+        } else {
+          setError("Invalid credentials!");
+        }
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   }
 
@@ -64,7 +78,8 @@ export default function LoginPage() {
       <div className="flex flex-col vh bg-white md:bg-transparent md:mx-5 place-content-center md:w-1/2">
         {fromRegister && (
           <div className="w-5/6 bg-green-400 mx-auto text-center text-white text-lg py-2 rounded-lg mb-5 border-2 border-solid border-green-500">
-            Registration successful!
+            Registration successful! Please check your email for a confirmation
+            link.
           </div>
         )}
         <Link

@@ -9,9 +9,10 @@ import SchedulePage from "./pages/SchedulePage";
 import SchedulesPage from "./pages/SchedulesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import AboutPage from "./pages/AboutPage";
+import EditSchedule from "./pages/EditSchedule";
+import VerifyEmailPage from "./pages/VerifyEmailPage";
 import { UserContextProvider } from "./UserContext";
 import { useEffect, useState } from "react";
-import EditSchedule from "./pages/EditSchedule";
 import axios from "axios";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -79,10 +80,8 @@ function App() {
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route
-          path="/schedule/:url"
-          element={<SchedulePage handleTheme={handleTheme} />}
-        />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/schedule/:url" element={<SchedulePage handleTheme={handleTheme} />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </UserContextProvider>
