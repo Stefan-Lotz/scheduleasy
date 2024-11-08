@@ -14,6 +14,7 @@ import {
   ComputerDesktopIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import Logo from "./ScheduleasyLogo";
 import axios from "axios";
 
 const Header = ({ handleTheme }) => {
@@ -235,8 +236,14 @@ const Header = ({ handleTheme }) => {
   return (
     <>
       <header className="text-slate dark:text-white my-2.5 hidden md:flex justify-between px-4 items-center max-w-screen-xl mx-auto font-syne text-lg">
-        <Link to="/" className="text-3xl font-shrikhand">
+        <Link to="/" className="text-3xl font-shrikhand flex items-center gap-1">
           Scheduleasy
+          <Logo
+            color={
+              localStorage.getItem("theme") === "light" ? "#264653" : "white"
+            }
+            size="35"
+          />
         </Link>
         <nav className="gap-5 font-semibold">
           {username && (
@@ -308,7 +315,12 @@ const Header = ({ handleTheme }) => {
       </header>
       <header className="text-slate my-2.5 flex md:hidden justify-between px-4 md:justify-around md:px-0 items-center max-w-screen-xl mx-auto font-syne text-lg">
         <Link to="/" className="text-3xl font-shrikhand dark:text-white">
-          Scheduleasy
+          <Logo
+            color={
+              localStorage.getItem("theme") === "light" ? "#264653" : "white"
+            }
+            size="40"
+          />
         </Link>
         <nav>
           {username && (
